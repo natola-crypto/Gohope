@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Aurora Academy — Student Results Portal</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      /* Same theme colors */
+      --bg: #f6f9ff;
+      --surface: rgba(255,255,255,.78);
+      --surface-2: rgba(255,255,255,.58);
+      --stroke: rgba(17, 38, 74, .12);
+
+      --ink: #0a1a33;
+      --muted: rgba(10, 26, 51, .72);
+      --subtle: rgba(10, 26, 51, .56);
+
+      --navy: #071a3a;
+      --navy-2: #0b2b66;
+      --sky: #4db8ff;
+      --sky-2: #9fe0ff;
+      --silver: #c7d0dc;
+      --silver-2: #e7edf6;
+
+      --good: #1aa37a;
+      --warn: #ffb020;
+      --bad: #ff4d6d;
+
+      --shadow: 0 22px 60px rgba(7, 26, 58, .16);
+      --shadow-soft: 0 10px 30px rgba(7, 26, 58, .10);
+
+      --r-sm: 14px;
+      --r-md: 18px;
+      --r-lg: 26px;
+
+      --max: 900px;
+
+      --h1: clamp(1.65rem, 1.1rem + 2.2vw, 2.8rem);
+      --h2: clamp(1.2rem, .9rem + 1.2vw, 1.6rem);
+      --h3: clamp(1.05rem, .9rem + .6vw, 1.2rem);
+      --p: clamp(.95rem, .9rem + .2vw, 1.05rem);
+
+      --ease: cubic-bezier(.2,.8,.2,1);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: "Sora", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 12px;
+    }
+
+    h1 {
+      font-family: "Space Grotesk", "Sora", sans-serif;
+      font-size: var(--h1);
+      margin-bottom: 12px;
+      color: var(--navy-2);
+      text-align: center;
+    }
+
+    .container {
+      background: var(--surface);
+      border-radius: var(--r-lg);
+      box-shadow: var(--shadow);
+      max-width: var(--max);
+      width: 100%;
+      padding: 24px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* Table styles */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 12px;
+      font-size: var(--p);
+      color: var(--ink);
+    }
+
+    thead tr {
+      background: var(--sky-2);
+      color: var(--navy);
+      font-weight: 600;
+      border-radius: var(--r-md);
+      box-shadow: 0 4px 10px rgba(77,184,255,.15);
+    }
+
+    thead th {
+      padding: 14px 18px;
+      text-align: left;
+      user-select: none;
+    }
+
+    tbody tr {
+      background: var(--surface-2);
+      box-shadow: 0 8px 20px rgba(7,26,58,.08);
+      border-radius: var(--r-md);
+      transition: background .3s var(--ease), box-shadow .3s var(--ease);
+      cursor: default;
+    }
+
+    tbody tr:hover {
+      background: var(--sky-2);
+      box-shadow: 0 14px 30px rgba(7,26,58,.12);
+    }
+
+    tbody td {
+      padding: 14px 18px;
+      vertical-align: middle;
+      border-bottom: none;
+    }
+
+    /* Rounded corners on first and last cells */
+    tbody tr td:first-child {
+      border-top-left-radius: var(--r-md);
+      border-bottom-left-radius: var(--r-md);
+    }
+    tbody tr td:last-child {
+      border-top-right-radius: var(--r-md);
+      border-bottom-right-radius: var(--r-md);
+      text-align: center;
+      font-weight: 600;
+    }
+
+    /* Grade badges */
+    .grade {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-family: "Space Grotesk", "Sora", sans-serif;
+      color: white;
+      min-width: 48px;
+      text-align: center;
+      user-select: none;
+    }
+    .grade.A { background: var(--good); }
+    .grade.B { background: var(--sky); color: var(--navy); }
+    .grade.C { background: var(--silver); color: var(--navy); }
+    .grade.D { background: var(--warn); }
+    .grade.F { background: var(--bad); }
+
+    /* Responsive */
+    @media (max-width: 720px) {
+      .container {
+        padding: 16px 20px;
+      }
+      thead tr {
+        display: none;
+      }
+      tbody tr {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto auto auto;
+        gap: 6px 12px;
+        padding: 16px 12px;
+      }
+      tbody tr td {
+        padding: 0;
+        border-radius: 0;
+      }
+      tbody tr td:first-child {
+        border-radius: 0;
+      }
+      tbody tr td:last-child {
+        border-radius: 0;
+        text-align: left;
+        font-weight: 400;
+      }
+      tbody tr td.subject {
+        grid-column: 1 / 3;
+        font-weight: 600;
+        font-size: 1.1rem;
+        color: var(--navy-2);
+      }
+      tbody tr td.grade {
+        justify-self: start;
+        font-weight: 700;
+        font-size: 1rem;
+        padding-top: 6px;
+      }
+      tbody tr td.score {
+        justify-self: end;
+        font-weight: 600;
+        font-size: 1rem;
+        color: var(--muted);
+      }
+    }
+
+    /* Filter & search */
+    .filterBar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .filterBar input[type="search"] {
+      flex-grow: 1;
+      min-width: 180px;
+      padding: 10px 14px;
+      border-radius: var(--r-md);
+      border: 1px solid var(--stroke);
+      font-size: var(--p);
+      outline-offset: 2px;
+      transition: border-color .3s var(--ease);
+    }
+    .filterBar input[type="search"]:focus {
+      border-color: var(--sky);
+      box-shadow: 0 0 8px var(--sky);
+    }
+    .filterBar select {
+      padding: 10px 14px;
+      border-radius: var(--r-md);
+      border: 1px solid var(--stroke);
+      font-size: var(--p);
+      outline-offset: 2px;
+      cursor: pointer;
+      background: white;
+      transition: border-color .3s var(--ease);
+    }
+    .filterBar select:focus {
+      border-color: var(--sky);
+      box-shadow: 0 0 8px var(--sky);
+    }
+
+    /* No results message */
+    .noResults {
+      text-align: center;
+      font-size: var(--p);
+      color: var(--muted);
+      padding: 40px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Aurora Academy — Student Results Portal</h1>
+
+  <div class="container" role="main" aria-label="Student results dashboard">
+    <div class="filterBar" aria-label="Filter and search results">
+      <input type="search" id="searchInput" placeholder="Search subjects or grades…" aria-label="Search results" />
+      <select id="gradeFilter" aria-label="Filter by grade">
+        <option value="">All Grades</option>
+        <option value="A">Grade A</option>
+        <option value="B">Grade B</option>
+        <option value="C">Grade C</option>
+        <option value="D">Grade D</option>
+        <option value="F">Grade F</option>
+      </select>
+    </div>
+
+    <table aria-describedby="resultsDesc" role="table">
+      <caption id="resultsDesc" class="sr-only">List of subjects and student grades</caption>
+      <thead>
+        <tr>
+          <th scope="col">Subject</th>
+          <th scope="col">Teacher</th>
+          <th scope="col">Score (%)</th>
+          <th scope="col">Grade</th>
+        </tr>
+      </thead>
+      <tbody id="resultsBody">
+        <!-- JS fills -->
+      </tbody>
+    </table>
+
+    <div id="noResults" class="noResults" hidden>No results found.</div>
+  </div>
+
+  <script>
+    const resultsData = [
+      { subject: "Mathematics", teacher: "Mr. Banda", score: 88, grade: "A" },
+      { subject: "English", teacher: "Ms. Chirwa", score: 79, grade: "B" },
+      { subject: "Physics", teacher: "Mr. Kamanga", score: 65, grade: "C" },
+      { subject: "Chemistry", teacher: "Ms. Mwale", score: 72, grade: "B" },
+      { subject: "Biology", teacher: "Dr. Phiri", score: 90, grade: "A" },
+      { subject: "History", teacher: "Mr. Moyo", score: 55, grade: "D" },
+      { subject: "Geography", teacher: "Ms. Tembo", score: 48, grade: "F" },
+      { subject: "ICT", teacher: "Mr. Nkhoma", score: 85, grade: "A" },
+      { subject: "Physical Education", teacher: "Coach Lungu", score: 92, grade: "A" }
+    ];
+
+    const tbody = document.getElementById('resultsBody');
+    const noResults = document.getElementById('noResults');
+    const searchInput = document.getElementById('searchInput');
+    const gradeFilter = document.getElementById('gradeFilter');
+
+    function renderResults(data) {
+      tbody.innerHTML = '';
+      if (data.length === 0) {
+        noResults.hidden = false;
+        return;
+      }
+      noResults.hidden = true;
+
+      data.forEach(({subject, teacher, score, grade}) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="subject">${subject}</td>
+          <td>${teacher}</td>
+          <td>${score}%</td>
+          <td><span class="grade ${grade}">${grade}</span></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function filterResults() {
+      const query = searchInput.value.trim().toLowerCase();
+      const gradeVal = gradeFilter.value;
+
+      const filtered = resultsData.filter(({subject, teacher, grade}) => {
+        const matchesQuery = subject.toLowerCase().includes(query) || teacher.toLowerCase().includes(query);
+        const matchesGrade = gradeVal === '' || grade === gradeVal;
+        return matchesQuery && matchesGrade;
+      });
+
+      renderResults(filtered);
+    }
+
+    searchInput.addEventListener('input', filterResults);
+    gradeFilter.addEventListener('change', filterResults);
+
+    // Initial render
+    renderResults(resultsData);
+  </script>
+
+  <style>
+    /* Screen reader only */
+    .sr-only {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      padding: 0 !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      clip: rect(0,0,0,0) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+    }
+  </style>
+</body>
+</html>
