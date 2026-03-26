@@ -1,26 +1,32 @@
-.dashboard {
-    background-color: #001f3f; /* dark blue */
-    color: #87CEEB; /* sky blue */
-    border: 2px solid #C0C0C0; /* silver */
+.element {
+    background-color: darkblue;
+    color: silver;
 }
 
-.dashboard-header {
-    background-color: #001f3f;
-    color: white;
-    padding: 10px;
+.element:hover {
+    background-color: skyblue;
+}
+
+.header {
+    background-color: darkblue;
+    color: silver;
+    padding: 20px;
     text-align: center;
 }
 
-.dashboard-item {
-    background-color: #87CEEB;
-    margin: 10px;
-    padding: 15px;
-    border: 1px solid #C0C0C0;
+.button {
+    background-color: silver;
+    border: none;
+    color: darkblue;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    margin: 4px 2px;
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
-.dashboard-footer {
-    background-color: #001f3f;
-    color: white;
-    text-align: center;
-    padding: 10px;
+.button:hover {
+    background-color: skyblue;
 }
