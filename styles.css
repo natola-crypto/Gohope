@@ -1,0 +1,40 @@
+/* styles.css - Style for School Results Webpage */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+.results-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.results-table th, .results-table td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: left;
+}
+
+.results-table th {
+    background-color: #007BFF;
+    color: white;
+}
+
+.results-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.footer {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 0.9em;
+}
