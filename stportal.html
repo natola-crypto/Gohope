@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Natola CDSS Student Portal</title>
-  <link rel="icon" type="image/png" href="toplogo.png">
 
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -84,22 +83,19 @@
       gap: 24px;
     }
 
-    /* Student info card */
+    /* Student info section replacing search */
     .studentInfo {
-      background: var(--surface-2);
-      border-radius: var(--r-md);
-      padding: 16px 24px;
-      box-shadow: var(--shadow-soft);
       font-size: var(--p);
       color: var(--navy-2);
+      font-weight: 600;
       display: flex;
       flex-wrap: wrap;
-      gap: 20px;
+      gap: 24px;
       justify-content: flex-start;
+      user-select: none;
     }
     .studentInfo div {
       min-width: 140px;
-      font-weight: 600;
     }
     .studentInfo label {
       font-weight: 700;
@@ -190,7 +186,7 @@
       tbody tr {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        grid-template-rows: auto auto auto auto auto auto;
+        grid-template-rows: auto auto auto auto auto;
         gap: 6px 12px;
         padding: 16px 12px;
       }
@@ -244,7 +240,7 @@
       }
     }
 
-    /* Filter & search removed */
+    /* Filter & search styles remain unchanged */
 
     /* No results message */
     .noResults {
@@ -294,6 +290,17 @@
       <div><label>Class:</label> Form 2 West</div>
       <div><label>Sex:</label> Male</div>
     </section>
+
+    <div class="filterBar" aria-label="Filter results by grade">
+      <select id="gradeFilter" aria-label="Filter by grade">
+        <option value="">All Grades</option>
+        <option value="A">Grade A</option>
+        <option value="B">Grade B</option>
+        <option value="C">Grade C</option>
+        <option value="D">Grade D</option>
+        <option value="F">Grade F</option>
+      </select>
+    </div>
 
     <table aria-describedby="resultsDesc" role="table">
       <caption id="resultsDesc" class="sr-only">List of subjects and student grades with position and comments</caption>
@@ -348,6 +355,7 @@
 
     const tbody = document.getElementById('resultsBody');
     const noResults = document.getElementById('noResults');
+    const gradeFilter = document.getElementById('gradeFilter');
 
     function renderResults(data) {
       tbody.innerHTML = '';
@@ -406,6 +414,13 @@
       aggregateStatusEl.textContent = `Status: ${hasFail ? 'Failed' : 'Passed'}`;
       finalRemarksEl.textContent = `Final remarks: ${remarks}`;
     }
+
+    gradeFilter.addEventListener('change', () => {
+      const gradeVal = gradeFilter.value;
+      const filtered = gradeVal === '' ? resultsData : resultsData.filter(r => r.grade === gradeVal);
+      renderResults(filtered);
+      updateAggregate(filtered);
+    });
 
     // Initial render
     renderResults(resultsData);
