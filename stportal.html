@@ -391,8 +391,376 @@
         return matchesQuery && matchesGrade;
       });
 
-      renderResults(filtered);
-      updateAggregate(filtered);
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Natola CDSS Student Portal</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      /* Same theme colors */
+      --bg: #f6f9ff;
+      --surface: rgba(255,255,255,.78);
+      --surface-2: rgba(255,255,255,.58);
+      --stroke: rgba(17, 38, 74, .12);
+
+      --ink: #0a1a33;
+      --muted: rgba(10, 26, 51, .72);
+      --subtle: rgba(10, 26, 51, .56);
+
+      --navy: #071a3a;
+      --navy-2: #0b2b66;
+      --sky: #4db8ff;
+      --sky-2: #9fe0ff;
+      --silver: #c7d0dc;
+      --silver-2: #e7edf6;
+
+      --good: #1aa37a;
+      --warn: #ffb020;
+      --bad: #ff4d6d;
+
+      --shadow: 0 22px 60px rgba(7, 26, 58, .16);
+      --shadow-soft: 0 10px 30px rgba(7, 26, 58, .10);
+
+      --r-sm: 14px;
+      --r-md: 18px;
+      --r-lg: 26px;
+
+      --max: 900px;
+
+      --h1: clamp(1.65rem, 1.1rem + 2.2vw, 2.8rem);
+      --h2: clamp(1.2rem, .9rem + 1.2vw, 1.6rem);
+      --h3: clamp(1.05rem, .9rem + .6vw, 1.2rem);
+      --p: clamp(.95rem, .9rem + .2vw, 1.05rem);
+
+      --ease: cubic-bezier(.2,.8,.2,1);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: "Sora", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 12px;
+    }
+
+    h1 {
+      font-family: "Space Grotesk", "Sora", sans-serif;
+      font-size: var(--h1);
+      margin-bottom: 12px;
+      color: var(--navy-2);
+      text-align: center;
+    }
+
+    .container {
+      background: var(--surface);
+      border-radius: var(--r-lg);
+      box-shadow: var(--shadow);
+      max-width: var(--max);
+      width: 100%;
+      padding: 24px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* Student info card */
+    .studentInfo {
+      background: var(--surface-2);
+      border-radius: var(--r-md);
+      padding: 16px 24px;
+      box-shadow: var(--shadow-soft);
+      font-size: var(--p);
+      color: var(--navy-2);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: flex-start;
+    }
+    .studentInfo div {
+      min-width: 140px;
+      font-weight: 600;
+    }
+    .studentInfo label {
+      font-weight: 700;
+      color: var(--sky);
+      margin-right: 6px;
+    }
+
+    /* Table styles */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 12px;
+      font-size: var(--p);
+      color: var(--ink);
+    }
+
+    thead tr {
+      background: var(--sky-2);
+      color: var(--navy);
+      font-weight: 600;
+      border-radius: var(--r-md);
+      box-shadow: 0 4px 10px rgba(77,184,255,.15);
+    }
+
+    thead th {
+      padding: 14px 18px;
+      text-align: left;
+      user-select: none;
+    }
+
+    tbody tr {
+      background: var(--surface-2);
+      box-shadow: 0 8px 20px rgba(7,26,58,.08);
+      border-radius: var(--r-md);
+      transition: background .3s var(--ease), box-shadow .3s var(--ease);
+      cursor: default;
+    }
+
+    tbody tr:hover {
+      background: var(--sky-2);
+      box-shadow: 0 14px 30px rgba(7,26,58,.12);
+    }
+
+    tbody td {
+      padding: 14px 18px;
+      vertical-align: middle;
+      border-bottom: none;
+    }
+
+    /* Rounded corners on first and last cells */
+    tbody tr td:first-child {
+      border-top-left-radius: var(--r-md);
+      border-bottom-left-radius: var(--r-md);
+    }
+    tbody tr td:last-child {
+      border-top-right-radius: var(--r-md);
+      border-bottom-right-radius: var(--r-md);
+      text-align: left;
+      font-weight: 600;
+    }
+
+    /* Grade badges */
+    .grade {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-family: "Space Grotesk", "Sora", sans-serif;
+      color: white;
+      min-width: 48px;
+      text-align: center;
+      user-select: none;
+    }
+    .grade.A { background: var(--good); }
+    .grade.B { background: var(--sky); color: var(--navy); }
+    .grade.C { background: var(--silver); color: var(--navy); }
+    .grade.D { background: var(--warn); }
+    .grade.F { background: var(--bad); }
+
+    /* Responsive */
+    @media (max-width: 720px) {
+      .container {
+        padding: 16px 20px;
+      }
+      thead tr {
+        display: none;
+      }
+      tbody tr {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto auto auto auto auto auto;
+        gap: 6px 12px;
+        padding: 16px 12px;
+      }
+      tbody tr td {
+        padding: 0;
+        border-radius: 0;
+      }
+      tbody tr td:first-child {
+        border-radius: 0;
+      }
+      tbody tr td:last-child {
+        border-radius: 0;
+        text-align: left;
+        font-weight: 400;
+      }
+      tbody tr td.subject {
+        grid-column: 1 / 3;
+        font-weight: 600;
+        font-size: 1.1rem;
+        color: var(--navy-2);
+      }
+      tbody tr td.position {
+        font-weight: 600;
+        font-size: 1rem;
+        justify-self: start;
+      }
+      tbody tr td.grade {
+        justify-self: start;
+        font-weight: 700;
+        font-size: 1rem;
+        padding-top: 6px;
+      }
+      tbody tr td.score {
+        justify-self: end;
+        font-weight: 600;
+        font-size: 1rem;
+        color: var(--muted);
+      }
+      tbody tr td.comments {
+        grid-column: 1 / 3;
+        font-style: italic;
+        color: var(--muted);
+        font-size: 0.9rem;
+        padding-top: 6px;
+      }
+      tbody tr td.teacher {
+        grid-column: 1 / 3;
+        font-size: 0.95rem;
+        color: var(--subtle);
+        padding-top: 4px;
+      }
+    }
+
+    /* Filter & search removed */
+
+    /* No results message */
+    .noResults {
+      text-align: center;
+      font-size: var(--p);
+      color: var(--muted);
+      padding: 40px 0;
+    }
+
+    /* Aggregate card */
+    .aggregateCard {
+      background: var(--surface-2);
+      border-radius: var(--r-lg);
+      box-shadow: var(--shadow-soft);
+      padding: 20px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-width: var(--max);
+      width: 100%;
+      color: var(--navy-2);
+    }
+    .aggregateCard h2 {
+      margin: 0;
+      font-family: "Space Grotesk", "Sora", sans-serif;
+      font-size: var(--h2);
+      border-bottom: 2px solid var(--sky);
+      padding-bottom: 6px;
+    }
+    .aggregateCard .summary {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+    .aggregateCard .remarks {
+      font-style: italic;
+      font-size: 1rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <h1>Natola CDSS Student Portal</h1>
+
+  <div class="container" role="main" aria-label="Student results dashboard">
+    <section class="studentInfo" aria-label="Student information">
+      <div><label>Name:</label> Tiyesele Koding</div>
+      <div><label>Class:</label> Form 2 West</div>
+      <div><label>Sex:</label> Male</div>
+    </section>
+
+    <table aria-describedby="resultsDesc" role="table">
+      <caption id="resultsDesc" class="sr-only">List of subjects and student grades with position and comments</caption>
+      <thead>
+        <tr>
+          <th scope="col">Subject</th>
+          <th scope="col">Teacher</th>
+          <th scope="col">Score (%)</th>
+          <th scope="col">Grade</th>
+          <th scope="col">Position</th>
+          <th scope="col">Comments</th>
+        </tr>
+      </thead>
+      <tbody id="resultsBody">
+        <!-- JS fills -->
+      </tbody>
+    </table>
+
+    <div id="noResults" class="noResults" hidden>No results found.</div>
+  </div>
+
+  <section class="aggregateCard" aria-label="Aggregate performance summary" role="region" tabindex="0">
+    <h2>Aggregate Performance Summary</h2>
+    <div class="summary" id="aggregatePosition">Position in class: —</div>
+    <div class="summary" id="aggregateStatus">Status: —</div>
+    <div class="remarks" id="finalRemarks">Final remarks: —</div>
+  </section>
+
+  <script>
+    // Updated subjects and teachers
+    const resultsData = [
+      { subject: "Mathematics", teacher: "L. Jabesi", score: 88, grade: "A", position: 3 },
+      { subject: "Computer Studies", teacher: "H. Kwanunkhatonde", score: 79, grade: "B", position: 5 },
+      { subject: "Physics", teacher: "M. Tembo", score: 65, grade: "C", position: 8 },
+      { subject: "Chemistry", teacher: "J. Mtengavumba", score: 72, grade: "B", position: 6 },
+      { subject: "English", teacher: "M. Flitghton", score: 90, grade: "A", position: 2 },
+      { subject: "Biology", teacher: "S. Malijani", score: 55, grade: "D", position: 12 },
+      { subject: "Agriculture", teacher: "C. Chepani", score: 48, grade: "F", position: 15 },
+      { subject: "History", teacher: "E. Phiri", score: 85, grade: "A", position: 4 },
+      { subject: "Geography", teacher: "G. Ngolombe", score: 92, grade: "A", position: 1 },
+      { subject: "Social & Life/Skills", teacher: "Semu Banda", score: 78, grade: "B", position: 7 },
+      { subject: "Chichewa", teacher: "E. Mughandira", score: 82, grade: "B", position: 6 }
+    ];
+
+    const commentsMap = {
+      'A': 'Excellent performance',
+      'B': 'Very good work',
+      'C': 'Good effort',
+      'D': 'Average, needs improvement',
+      'F': 'Fail, must retake'
+    };
+
+    const tbody = document.getElementById('resultsBody');
+    const noResults = document.getElementById('noResults');
+
+    function renderResults(data) {
+      tbody.innerHTML = '';
+      if (data.length === 0) {
+        noResults.hidden = false;
+        return;
+      }
+      noResults.hidden = true;
+
+      data.forEach(({subject, teacher, score, grade, position}) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="subject">${subject}</td>
+          <td class="teacher">${teacher}</td>
+          <td class="score">${score}%</td>
+          <td><span class="grade ${grade}">${grade}</span></td>
+          <td class="position">${position}</td>
+          <td class="comments">${commentsMap[grade] || ''}</td>
+        `;
+        tbody.appendChild(tr);
+      });
     }
 
     // Aggregate calculation and display
@@ -430,9 +798,6 @@
       aggregateStatusEl.textContent = `Status: ${hasFail ? 'Failed' : 'Passed'}`;
       finalRemarksEl.textContent = `Final remarks: ${remarks}`;
     }
-
-    searchInput.addEventListener('input', filterResults);
-    gradeFilter.addEventListener('change', filterResults);
 
     // Initial render
     renderResults(resultsData);
