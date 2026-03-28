@@ -140,16 +140,19 @@
       
     </form>
     <button class ="submit" onclick = "login()">Log In</button>
-    <p class="footer-text">Please enter your examination number and password to access your results.</p>
+    <p class="footer-text" id="tell">Please enter your examination number and password to access your results.</p>
   </main>
 
   <script>
     function login(){
-        
+       var tell = document.getElementById("tell"); 
         var examNo = document.getElementById("examNumber");
         var stPassword = document.getElementById("password");
         if(examNo.value == "23001" && stPassword.value == "n9&n4"){
             window.location.href = "stportal.html";
+        }else{
+          tell.textContent = "The details entered are incorrect";
+          tell.style.color = "red";
         }
     }
     
