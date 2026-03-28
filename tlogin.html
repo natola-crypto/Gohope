@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Natola CDSS Teacher Login</title>
+  <link rel="icon" type="image/png" href="toplogo.png">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --navy: #071a3a;
+      --sky: #4db8ff;
+      --silver: #c7d0dc;
+      --bg: #f6f9ff;
+      --ink: #0a1a33;
+      --shadow: 0 22px 60px rgba(7, 26, 58, .16);
+      --r-lg: 26px;
+      --ease: cubic-bezier(.2,.8,.2,1);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Sora", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .login-container {
+      background: white;
+      max-width: 400px;
+      width: 100%;
+      padding: 32px 28px;
+      border-radius: var(--r-lg);
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 24px;
+      font-weight: 600;
+      color: var(--navy);
+      font-size: 1.8rem;
+      font-family: "Sora", sans-serif;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    label {
+      text-align: left;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--navy);
+      font-size: 1rem;
+      user-select: none;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      padding: 12px 14px;
+      border: 1.8px solid var(--silver);
+      border-radius: 14px;
+      font-size: 1rem;
+      outline-offset: 2px;
+      transition: border-color 0.3s var(--ease);
+    }
+
+    input[type="text"]:focus,
+    input[type="password"]:focus {
+      border-color: var(--sky);
+      box-shadow: 0 0 8px var(--sky);
+    }
+
+    button {
+    width: 300px;
+      margin-top: 12px;
+      padding: 14px 0;
+      background: var(--navy);
+      color: white;
+      font-weight: 700;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: background-color 0.3s var(--ease), transform 0.2s var(--ease);
+      user-select: none;
+    }
+
+    button:hover {
+      background: var(--sky);
+      color: var(--navy);
+      transform: translateY(-2px);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .footer-text {
+      margin-top: 18px;
+      font-size: 0.9rem;
+      color: var(--silver);
+      user-select: none;
+    }
+
+    @media (max-width: 440px) {
+      .login-container {
+        padding: 24px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="login-container" role="main" aria-label="Student login form">
+    <h1>Teacher Portal</h1>
+    <form id="loginForm" novalidate>
+      <div>
+        <label for="examNumber">Exam No.</label>
+        <input type="text" id="examNumber" name="examNumber" placeholder="Enter your exam number" required autocomplete="username" aria-required="true" />
+      </div>
+      <div>
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="Enter your password" required autocomplete="current-password" aria-required="true" />
+      </div>
+      
+    </form>
+    <button class ="submit" onclick = "login()">Log In</button>
+    <p class="footer-text" id="tell">Please enter your examination number and password to access your results.</p>
+  </main>
+
+  <script>
+    function login(){
+       var tell = document.getElementById("tell"); 
+        var examNo = document.getElementById("examNumber");
+        var stPassword = document.getElementById("password");
+        if(examNo.value == "23001" && stPassword.value == "n9&n4"){
+            window.location.href = "stportal.html";
+        }else{
+          tell.textContent = "The details entered are incorrect, please cross check your examination number and password then try again";
+          tell.style.color = "red";
+        }
+    }
+    
+  </script>
+</body>
+</html>
