@@ -131,7 +131,7 @@
     <form id="loginForm" novalidate>
       <div>
         <label for="examNumber">Exam No.</label>
-        <input type="text" id="examNumber" name="examNumber" placeholder="Enter your exam number" required autocomplete="username" aria-required="true" />
+        <input type="text" id="examNumber" name="examNumber" placeholder="Enter the Teacher Code" required autocomplete="username" aria-required="true" />
       </div>
       <div>
         <label for="password">Password</label>
@@ -140,7 +140,7 @@
       
     </form>
     <button class ="submit" onclick = "login()">Log In</button>
-    <p class="footer-text" id="tell">Please enter your examination number and password to access your results.</p>
+    <p class="footer-text" id="tell">Please enter your teacher code and password to access the results.</p>
   </main>
 
   <script>
@@ -151,7 +151,7 @@
         if(examNo.value == "23001" && stPassword.value == "n9&n4"){
             window.location.href = "stportal.html";
         }else{
-          tell.textContent = "The details entered are incorrect, please cross check your examination number and password then try again";
+          tell.textContent = "The details entered are incorrect, please cross check the teacher code and password then try again";
           tell.style.color = "red";
         }
     }
