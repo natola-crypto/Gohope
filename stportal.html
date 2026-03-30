@@ -91,17 +91,22 @@
       font-weight: 600;
       display: flex;
       flex-wrap: wrap;
-      gap: 24px;
+      gap: 50px;
       justify-content: flex-start;
       user-select: none;
     }
-    .studentInfo div {
-      min-width: 140px;
-    }
-    .studentInfo label {
+  
+    label {
       font-weight: 700;
       color: var(--sky);
       margin-right: 6px;
+    }
+    .term_title{
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: var(--sky);
+      margin: auto;
+      text-align: center;
     }
 
     /* Table styles */
@@ -119,6 +124,7 @@
       font-weight: 600;
       border-radius: var(--r-md);
       box-shadow: 0 4px 10px rgba(77,184,255,.15);
+      
     }
     .gradeFilter{
       background: var(--sky-2);
@@ -130,6 +136,7 @@
     }
     thead th {
       padding: 14px 18px;
+      padding-left: 8px;
       text-align: left;
       user-select: none;
     }
@@ -183,6 +190,18 @@
     .grade.D { background: var(--warn); }
     .grade.F { background: var(--bad); }
 
+    .passed { 
+      background-color: var(--good);
+      padding: 4px 13px; 
+      border-radius: 13px;
+      color: white;
+    }
+    .failed {
+       background: var(--bad);
+        padding: 4px 13px; 
+      border-radius: 13px; 
+      color: white;
+    }
     /* Responsive */
     @media (max-width: 720px) {
       .container {
@@ -231,7 +250,7 @@
       }
       tbody tr td.position {
         font-weight: 600;
-        font-size: 1rem;
+        font-size: 0.8rem;
         justify-self: start;
       }
       tbody tr td.grade {
@@ -291,11 +310,40 @@
       border-bottom: 2px solid var(--sky);
       padding-bottom: 6px;
     }
-    .aggregateCard .summary {
+    .aggregateCard .remarks {
+      font-style: italic;
+      font-size: 1rem;
+      color: var(--muted);
+    }
+
+    .st_details {
+      background-color: white;
+      border-radius: var(--r-lg);
+      box-shadow: var(--shadow-soft);
+      padding: 20px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-width: var(--max);
+      width: 100%;
+      color: var(--navy-2);
+      position: sticky;
+      top:0px;
+      z-index: 10;
+    }
+    .st_details h2 {
+      margin: 0;
+      font-family: "Space Grotesk", "Sora", sans-serif;
+      font-size: var(--h2);
+      border-bottom: 2px solid var(--sky);
+      padding-bottom: 6px;
+    }
+    .summary {
       font-size: 1.1rem;
       font-weight: 600;
+      display: flex;
     }
-    .aggregateCard .remarks {
+    .st_details .remarks {
       font-style: italic;
       font-size: 1rem;
       color: var(--muted);
@@ -304,14 +352,16 @@
 </head>
 <body>
   <h1>Natola CDSS</h1>
+  <section class="st_details">
+    <h2 id="st_name">Tiyesele Koding</h2>
+      <div class="summary" ><label>Exam No:</label><div id="st_no"></div></div>
+      <div class="summary" ><label>Sex:</label><div id="st_sex"></div></div>
+      <div class="summary" ><label>DoB:</label><div id="st_dob"></div></div>
+  </section><br>
 
   <div class="container" role="main" aria-label="Student results dashboard">
-    <section class="studentInfo" aria-label="Student information">
-      <div><label>Name:</label> Tiyesele Koding</div>
-      <div><label>Class:</label> Form 2 West</div>
-      <div><label>Sex:</label> Male</div>
-    </section>
-
+    
+    <div class="term_title">End of Term 1 Examination Results </div>
     <div class = "exam_display">
       <table aria-describedby="resultsDesc" role="table">
       <caption id="resultsDesc" class="sr-only">List of subjects and student grades with position and comments</caption>
@@ -339,114 +389,79 @@
       </tbody>
     </table>
     </div>
-    
+    <section class="studentInfo" aria-label="Student information">
+      <div class="summary" ><label>Class:</label><div id="class"></div></div>
+      <div class="summary" ><label>Position:</label><div id="class_rank"></div></div>
+      <div class="summary" ><label>Average:</label><div id="class_grade"></div></div>
+      <div class="summary" ><label>Status:</label><div id="status"></div></div>
+    </section>
+   
 
     <div id="noResults" class="noResults" hidden>No results found.</div>
   </div>
-
-  <section class="aggregateCard" aria-label="Aggregate performance summary" role="region" tabindex="0">
-    <h2>Aggregate Performance Summary</h2>
-    <div class="summary" id="aggregatePosition">Position in class: —</div>
-    <div class="summary" id="aggregateStatus">Status: —</div>
-    <div class="remarks" id="finalRemarks">Final remarks: —</div>
-  </section>
-
+  <script src="term1_data.js"></script>
   <script>
-    // Updated subjects and teachers
-    const resultsData = [
-      { subject: "Mathematics", teacher: "L. Jabesi", score: 88, grade: "A", position: 3 },
-      { subject: "Computer Studies", teacher: "H. Kwanunkhatonde", score: 79, grade: "B", position: 5 },
-      { subject: "Physics", teacher: "M. Tembo", score: 65, grade: "C", position: 8 },
-      { subject: "Chemistry", teacher: "J. Mtengavumba", score: 72, grade: "B", position: 6 },
-      { subject: "English", teacher: "M. Flitghton", score: 90, grade: "A", position: 2 },
-      { subject: "Biology", teacher: "S. Malijani", score: 55, grade: "D", position: 12 },
-      { subject: "Agriculture", teacher: "C. Chepani", score: 38, grade: "F", position: 15 },
-      { subject: "History", teacher: "E. Phiri", score: 85, grade: "A", position: 4 },
-      { subject: "Geography", teacher: "G. Ngolombe", score: 92, grade: "A", position: 1 },
-      { subject: "Social & Life/Skills", teacher: "Semu Banda", score: 78, grade: "B", position: 7 },
-      { subject: "Chichewa", teacher: "E. Mughandira", score: 82, grade: "B", position: 6 }
-    ];
-
-    const commentsMap = {
-      'A': 'Excellent performance',
-      'B': 'Very good work',
-      'C': 'Good effort',
-      'D': 'Average, needs improvement',
-      'F': 'Fail'
-    };
-
-    const tbody = document.getElementById('resultsBody');
-    const noResults = document.getElementById('noResults');
-    const gradeFilter = document.getElementById('gradeFilter');
-
-    function renderResults(data) {
-      tbody.innerHTML = '';
-      if (data.length === 0) {
-        noResults.hidden = false;
-        return;
-      }
-      noResults.hidden = true;
-
-      data.forEach(({subject, teacher, score, grade, position}) => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td class="subject">${subject}</td>
-          <td class="score">${score}%</td>
-          <td class="position">${position}/120</td>
-          <td><span class="grade ${grade}">${grade}</span></td>
-          <td class="comments">${commentsMap[grade] || ''}</td>
-          <td class="teacher">${teacher}</td>
-        `;
-        tbody.appendChild(tr);
+    const getpara = new URL(window.location.href);
+    const gotV = getpara.searchParams.get("st_no");
+    const studentName = document.getElementById("st_name");
+    const studentNo = document.getElementById("st_no");
+    const studentSex = document.getElementById("st_sex");
+    const studentDob = document.getElementById("st_dob");
+  
+    students.forEach(element => {
+          if(element["st_no"] == gotV){
+            studentName.textContent = element["st_name"];
+            studentNo.textContent = element["st_no"];
+            studentSex.textContent = element["st_sex"];
+            studentDob.textContent = element["st_dob"];
+          }
+        });
+const subjects = ["agr","bib","bio","che","chi","com","eng","geo","his","mat","phy","soc"];
+const subjectsNames ={
+  "agr":"Agriculture","bib":"Bible Knowledge","bio":"Biology","che":"Chemistry",
+  "chi":"Chichewa","com":"Computer Studies","eng":"English","geo":"Geography",
+  "his": "History","mat":"Mathematics","phy":"Physics","soc":"Social & Life"
+};
+const comments = {
+  "A":"Keep it up. don't relax",
+  "B":"Aim at better than this",
+  "C":"Has potential to beat this",
+  "D":"Extra effort still needed",
+  "F":"Work very hard to improve",
+}
+const tbody = document.getElementById('resultsBody');
+      tbody.innerHTML = '';   
+termlyData.forEach(element => {
+        if(element["st_no"] == gotV){
+          subjects.forEach( subject =>{
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+              <td class="subject">${subjectsNames[subject]}</td>
+              <td class="score">${element[subject]}%</td>
+              <td class="position">${element[subject+"_rank"]}/107</td>
+              <td><span class="grade ${element[subject+"_grade"]}">${element[subject+"_grade"]}</span></td>
+              <td class="comments">${comments[element[subject+"_grade"]]}</td>
+              <td class="teacher"></td>
+            `;
+            tbody.appendChild(tr);
+          });
+            
+          const classN = document.getElementById('class');
+          const position = document.getElementById('class_rank');
+          const classG = document.getElementById('class_grade');
+          const theStatus = document.getElementById('status');
+          classN.textContent = element['class'];
+          position.textContent = element['class_rank']+"/107";
+          classG.textContent = element['class_grade'];
+          theStatus.textContent = element['status'];
+            if(element['status'] == "passed"){
+              theStatus.classList.add("passed");
+            }else{
+              theStatus.classList.add("failed");
+            }
+              }
+      
       });
-    }
-
-    // Aggregate calculation and display
-    const aggregatePositionEl = document.getElementById('aggregatePosition');
-    const aggregateStatusEl = document.getElementById('aggregateStatus');
-    const finalRemarksEl = document.getElementById('finalRemarks');
-
-    function updateAggregate(data) {
-      if (data.length === 0) {
-        aggregatePositionEl.textContent = 'Position in class: —';
-        aggregateStatusEl.textContent = 'Status: —';
-        finalRemarksEl.textContent = 'Final remarks: —';
-        return;
-      }
-
-      // Calculate aggregate score average
-      const totalScore = data.reduce((sum, r) => sum + r.score, 0);
-      const avgScore = totalScore / data.length;
-
-      // Calculate aggregate position (average of positions rounded)
-      const totalPos = data.reduce((sum, r) => sum + r.position, 0);
-      const avgPos = Math.round(totalPos / data.length);
-
-      // Determine pass/fail: fail if any grade F, else pass
-      const hasFail = data.some(r => r.grade === 'F');
-
-      // Final remarks based on avgScore
-      let remarks = '';
-      if (avgScore >= 85) remarks = 'Outstanding overall performance. Keep it up!';
-      else if (avgScore >= 70) remarks = 'Good performance, room for improvement.';
-      else if (avgScore >= 40) remarks = 'Average performance, needs more effort.';
-      else remarks = 'Poor performance, consider extra help.';
-
-      aggregatePositionEl.textContent = `Position in class: ${avgPos}`;
-      aggregateStatusEl.textContent = `Status: ${hasFail ? 'Passed' : 'Failed'}`;
-      finalRemarksEl.textContent = `Final remarks: ${remarks}`;
-    }
-
-    gradeFilter.addEventListener('change', () => {
-      const gradeVal = gradeFilter.value;
-      const filtered = gradeVal === '' ? resultsData : resultsData.filter(r => r.grade === gradeVal);
-      renderResults(filtered);
-      updateAggregate(filtered);
-    });
-
-    // Initial render
-    renderResults(resultsData);
-    updateAggregate(resultsData);
   </script>
 
   <style>

@@ -142,18 +142,24 @@
     <button class ="submit" onclick = "login()">Log In</button>
     <p class="footer-text" id="tell">Please enter your examination number and password to access your results.</p>
   </main>
-
+<script src="term1_data.js"></script>
   <script>
     function login(){
        var tell = document.getElementById("tell"); 
         var examNo = document.getElementById("examNumber");
         var stPassword = document.getElementById("password");
-        if(examNo.value == "23001" && stPassword.value == "n9&n4"){
-            window.location.href = "stportal.html";
-        }else{
-          tell.textContent = "The details entered are incorrect, please cross check your examination number and password then try again";
-          tell.style.color = "red";
-        }
+        var wrongD = true;
+        students.forEach(element => {
+          if(examNo.value == element["st_no"] && stPassword.value == element["st_key"]){
+            window.location.href = "stportal.html?st_no="+element["st_no"];
+            wrongD = false;
+          }
+        });
+        if(wrongD == true){
+            tell.textContent = "The details entered are incorrect, please cross check your examination number and password then try again";
+            tell.style.color = "red";
+          }
+        
     }
     
   </script>
