@@ -434,7 +434,8 @@ const tbody = document.getElementById('resultsBody');
 termlyData.forEach(element => {
         if(element["st_no"] == gotV){
           subjects.forEach( subject =>{
-            const tr = document.createElement('tr');
+            if(element[subject] != "-"){
+              const tr = document.createElement('tr');
             tr.innerHTML = `
               <td class="subject">${subjectsNames[subject]}</td>
               <td class="score">${element[subject]}%</td>
@@ -444,6 +445,18 @@ termlyData.forEach(element => {
               <td class="teacher"></td>
             `;
             tbody.appendChild(tr);
+      }else{
+              const tr = document.createElement('tr');
+            tr.innerHTML = `
+              <td class="subject">${subjectsNames[subject]}</td>
+              <td class="score"> - </td>
+              <td class="position"> - </td>
+              <td><span class="grade"> - </span></td>
+              <td class="comments">did not write</td>
+              <td class="teacher"></td>
+            `;
+            tbody.appendChild(tr);
+      }
           });
             
           const classN = document.getElementById('class');
