@@ -473,10 +473,11 @@ termlyData.forEach(element => {
             const tr = document.createElement('tr');
             if(element["class"]== 4){
                   if(element[subject] >= 0 && subject != "com"){
+                  var subjectTotal = 0;
                   tr.innerHTML = `
                   <td class="subject">${subjectsNames[subject]}</td>
                   <td class="score">${element[subject]}%</td>
-                  <td class="position">${element[subject+"_rank"]}/107</td>
+                  <td class="position">${element[subject+"_rank"]}/${getTotal(element["class"], subject)}</td>
                   <td><span class= "grade ${styleGrades[element[subject+"_grade"]]}">${element[subject+"_grade"]}</span></td>
                   <td class="comments">${comments[element[subject+"_grade"]]}</td>
                   <td class="teacher"></td>
@@ -488,7 +489,7 @@ termlyData.forEach(element => {
                   tr.innerHTML = `
                   <td class="subject">${subjectsNames[subject]}</td>
                   <td class="score">${element[subject]}%</td>
-                  <td class="position">${element[subject+"_rank"]}/107</td>
+                  <td class="position">${element[subject+"_rank"]}/${getTotal(element["class"], subject)}</td>
                   <td><span class= "grade ${styleGrades[element[subject+"_grade"]]}">${element[subject+"_grade"]}</span></td>
                   <td class="comments">${comments[element[subject+"_grade"]]}</td>
                   <td class="teacher"></td>
@@ -526,11 +527,9 @@ termlyData.forEach(element => {
           });
             
           const classN = document.getElementById('class');
-          const position = document.getElementById('class_rank');
           const classG = document.getElementById('class_grade');
           const theStatus = document.getElementById('status');
           classN.textContent = element['class'];
-          position.textContent = element['class_rank']+"/107";
           classG.textContent = element['class_grade'];
           theStatus.textContent = element['status'];
             if(element['status'] == "passed"){
@@ -551,7 +550,7 @@ termlyData.forEach(element => {
             tr.innerHTML = `
               <td class="subject">${subjectsNames[subject]}</td>
               <td class="score">${element[subject]}%</td>
-              <td class="position">${element[subject+"_rank"]}/107</td>
+              <td class="position">${element[subject+"_rank"]}/${getTotal(element["class"], subject)}</td>
               <td><span class="grade ${element[subject+"_grade"]}">${element[subject+"_grade"]}</span></td>
               <td class="comments">${comments[element[subject+"_grade"]]}</td>
               <td class="teacher"></td>
@@ -560,11 +559,11 @@ termlyData.forEach(element => {
           });
             
           const classN = document.getElementById('class');
-          const position = document.getElementById('class_rank');
+          
           const classG = document.getElementById('class_grade');
           const theStatus = document.getElementById('status');
           classN.textContent = element['class'];
-          position.textContent = element['class_rank']+"/107";
+          
           classG.textContent = element['class_grade'];
           theStatus.textContent = element['status'];
             if(element['status'] == "passed"){
@@ -573,10 +572,34 @@ termlyData.forEach(element => {
               theStatus.classList.add("failed");
             }
           }
-          
+          const position = document.getElementById('class_rank');
+          position.textContent = element['class_rank']+'/'+getClassCount(element["class"]);
         }
       
       });
+function getClassCount(st_class){
+  var classTotal =0;
+  termlyData.forEach(record => {
+      if(record["class"] == st_class){
+         classTotal++;
+        }
+  });
+  return classTotal;
+}
+
+function getTotal(st_class, the_subject){
+  var no_sat =0;
+
+  termlyData.forEach(record => {
+        if(record["class"] == st_class){
+          
+          if(record[the_subject] >= 0){
+            no_sat++;
+          }
+        }
+  });
+  return no_sat;
+}
   </script>
 
   <style>

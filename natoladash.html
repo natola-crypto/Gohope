@@ -1127,7 +1127,7 @@
             
             <div class = "notice">
               <p style = "margin-top: 10px;">The 2025 to 2026 mock examination results and the end of term two
-                examination results are out. You can check them now through the 
+                examination results are <strong>not</strong> yet out. You can check the 2025 to 2026 end of term 1 examination results now through the 
                 <strong>students portal</strong> and the <strong>teachers portal</strong>.
                 </p>
               <div class="heroActions" role="group" aria-label="Primary actions">
@@ -1159,67 +1159,67 @@
           </div>
 
           <aside class="heroPanel heroAside reveal d4" aria-label="Highlights and calendar">
-            <strong>Term 2 Results</strong>
+            <strong>Term 1 Results Summary</strong>
             <div class="metricRow" aria-label="Key metrics">
               <div class="metric">
                   <div>
                     <div class="name"><strong>Form 4</strong></div>
-                    <div class="genda_data">Boys Passed: <strong>48</strong> • Girls Passed:<strong>52</strong></div>
+                    <div class="genda_data">Boys Passed: <strong id = "4_boys"></strong> • Girls Passed:<strong id = "4_girls"></strong></div>
                     <div class="barTrack" aria-label="Mathematics progress">
-                      <div class="barFill" style="width:46%"></div>
+                      <div class="barFill" id="4_barFill"></div>
                     </div>
                   </div>
-                  <div class="percent">46%</div>
+                  <div class="percent" id = "4_percent"></div>
               </div>
               <div class="metric">
                   <div>
                     <div class="name"><strong>Form 3</strong></div>
-                    <div class="genda_data">Boys Passed: <strong>67</strong> • Girls Passed:<strong>76</strong></div>
+                    <div class="genda_data">Boys Passed: <strong id = "3_boys"></strong> • Girls Passed:<strong id = "3_girls"></strong></div>
                     <div class="barTrack" aria-label="Mathematics progress">
-                      <div class="barFill" style="width:86%"></div>
+                      <div class="barFill" id="3_barFill"></div>
                     </div>
                   </div>
-                  <div class="percent">86%</div>
+                  <div class="percent" id = "3_percent"></div>
               </div>
               <div class="metric">
                   <div>
                     <div class="name"><strong>Form 2 East</strong></div>
-                    <div class="genda_data">Boys Passed: <strong>27</strong> • Girls Passed:<strong>13</strong></div>
+                    <div class="genda_data">Boys Passed: <strong id = "2E_boys"></strong> • Girls Passed:<strong id = "2E_girls"></strong></div>
                     <div class="barTrack" aria-label="Mathematics progress">
-                      <div class="barFill" style="width:15%"></div>
+                      <div class="barFill" id="2E_barFill"></div>
                     </div>
                   </div>
-                  <div class="percent">15%</div>
+                  <div class="percent" id = "2E_percent"></div>
               </div>
               <div class="metric">
                   <div>
                     <div class="name"><strong>Form 2 West</strong></div>
-                    <div class="genda_data">Boys Passed: <strong>29</strong> • Girls Passed:<strong>33</strong></div>
+                    <div class="genda_data">Boys Passed: <strong id = "2W_boys"></strong> • Girls Passed:<strong id = "2W_girls"></strong></div>
                     <div class="barTrack" aria-label="Mathematics progress">
-                      <div class="barFill" style="width:38%"></div>
+                      <div class="barFill" id="2W_barFill"></div>
                     </div>
                   </div>
-                  <div class="percent">38%</div>
+                  <div class="percent" id = "2W_percent"></div>
               </div>
               <div class="metric">
                   <div>
                     <div class="name"><strong>Form 1 East</strong></div>
-                    <div class="genda_data">Boys Passed: <strong>48</strong> • Girls Passed:<strong>62</strong></div>
+                    <div class="genda_data">Boys Passed: <strong id = "1W_boys"></strong> • Girls Passed:<strong id = "1W_girls"></strong></div>
                     <div class="barTrack" aria-label="Mathematics progress">
-                      <div class="barFill" style="width:74%"></div>
+                      <div class="barFill" id="1E_barFill"></div>
                     </div>
                   </div>
-                  <div class="percent">74%</div>
+                  <div class="percent" id = "1E_percent"></div>
               </div>
               <div class="metric">
                   <div>
                     <div class="name"><strong>Form 1 West</strong></div>
-                    <div class="genda_data">Boys Passed: <strong>69</strong> • Girls Passed:<strong>52</strong></div>
+                    <div class="genda_data">Boys Passed: <strong id = "1E_boys"></strong> • Girls Passed:<strong id = "1E_girls"></strong></div>
                     <div class="barTrack" aria-label="Mathematics progress">
-                      <div class="barFill" style="width:91%"></div>
+                      <div class="barFill" id="1W_barFill"></div>
                     </div>
                   </div>
-                  <div class="percent">91%</div>
+                  <div class="percent" id = "1W_percent"></div>
               </div>
 
             </div>
@@ -1239,7 +1239,7 @@
       </div>
     </main>
   </div>
-
+<script src="term1_data.js"></script>
   <script>
     // Helpers
     const $ = (q, el=document) => el.querySelector(q);
@@ -1250,254 +1250,59 @@
     const now = new Date();
     const fmt = new Intl.DateTimeFormat(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
     dateLine.textContent = fmt.format(now);
-
     $('#year').textContent = new Date().getFullYear();
 
-    // Sidebar open/close (mobile)
-    const sidebar = $('#sidebar');
-    const overlay = $('#overlay');
-    const openBtn = $('#openSidebarBtn');
-    const closeBtn = $('#closeSidebarBtn');
-
-    function openSidebar(){
-      sidebar.classList.add('open');
-      overlay.classList.add('on');
-      overlay.setAttribute('aria-hidden', 'false');
-      // focus management: move focus to close button
-      closeBtn.focus({ preventScroll: true });
-    }
-    function closeSidebar(){
-      sidebar.classList.remove('open');
-      overlay.classList.remove('on');
-      overlay.setAttribute('aria-hidden', 'true');
-      // return focus
-      openBtn?.focus?.({ preventScroll: true });
-    }
-    openBtn?.addEventListener('click', openSidebar);
-    closeBtn?.addEventListener('click', closeSidebar);
-    overlay.addEventListener('click', closeSidebar);
-    window.addEventListener('keydown', (e)=>{
-      if(e.key === 'Escape' && sidebar.classList.contains('open')) closeSidebar();
-    });
-
-    // Ctrl+K to focus search
-    const searchInput = $('#searchInput');
-    window.addEventListener('keydown', (e)=>{
-      const isMac = navigator.platform.toLowerCase().includes('mac');
-      const mod = isMac ? e.metaKey : e.ctrlKey;
-      if(mod && e.key.toLowerCase() === 'k'){
-        e.preventDefault();
-        searchInput.focus();
-      }
-    });
-
-    // Schedule data (modern school dashboard feature: timetable)
-    const scheduleToday = [
-      { time: '08:00', mer: 'AM', title: 'Mathematics', sub: 'Room B2 • Algebra & graphs', tag: {text:'Core', tone:'navy'} },
-      { time: '09:30', mer: 'AM', title: 'English', sub: 'Room A1 • Essay writing', tag: {text:'Language', tone:'silver'} },
-      { time: '11:00', mer: 'AM', title: 'ICT', sub: 'Lab 1 • Web fundamentals', tag: {text:'Practical', tone:''} },
-      { time: '01:00', mer: 'PM', title: 'Biology', sub: 'Room C3 • Cell processes', tag: {text:'Science', tone:'navy'} },
-      { time: '02:30', mer: 'PM', title: 'Study Hall', sub: 'Library • Quiet zone', tag: {text:'Focus', tone:'silver'} },
-    ];
-
-    const scheduleWeek = [
-      { time: 'Mon', mer: '—', title: 'Mathematics + ICT', sub: 'Core + Practical blocks', tag: {text:'6 periods', tone:'navy'} },
-      { time: 'Tue', mer: '—', title: 'English + Biology', sub: 'Language + Lab', tag: {text:'5 periods', tone:''} },
-      { time: 'Wed', mer: '—', title: 'Chemistry + Sports', sub: 'Lab + Athletics', tag: {text:'6 periods', tone:'silver'} },
-      { time: 'Thu', mer: '—', title: 'Physics + ICT', sub: 'Problem solving + Coding', tag: {text:'6 periods', tone:'navy'} },
-      { time: 'Fri', mer: '—', title: 'Revision + Clubs', sub: 'Mock tests + Activities', tag: {text:'4 periods', tone:'silver'} },
-    ];
-
-    function renderSchedule(list){
-      const host = $('#scheduleList');
-      host.innerHTML = '';
-      list.forEach((it)=>{
-        const row = document.createElement('div');
-        row.className = 'scheduleItem';
-        row.innerHTML = `
-          <div class="timeBox">
-            <strong>${it.time}</strong>
-            <span>${it.mer}</span>
-          </div>
-          <div class="classMeta">
-            <div class="title">${it.title}</div>
-            <div class="sub">${it.sub}</div>
-          </div>
-          <span class="tag ${it.tag.tone}">
-            <span class="bar" aria-hidden="true"></span>${it.tag.text}
-          </span>
-        `;
-        host.appendChild(row);
-      });
-
-      // Next class pill (first item in today view)
-      const nextPill = $('#nextClassPill');
-      if(list === scheduleToday && scheduleToday.length){
-        nextPill.innerHTML = `Next class: <strong>${scheduleToday[0].title}</strong>`;
-      } else {
-        nextPill.innerHTML = `Next class: <strong>See timetable</strong>`;
-      }
-    }
-    renderSchedule(scheduleToday);
-
-    // Segmented control
-    const viewToday = $('#viewToday');
-    const viewWeek = $('#viewWeek');
-
-    function setPressed(btn, pressed){
-      btn.setAttribute('aria-pressed', pressed ? 'true' : 'false');
-    }
-
-    viewToday.addEventListener('click', ()=>{
-      setPressed(viewToday, true); setPressed(viewWeek, false);
-      renderSchedule(scheduleToday);
-    });
-    viewWeek.addEventListener('click', ()=>{
-      setPressed(viewWeek, true); setPressed(viewToday, false);
-      renderSchedule(scheduleWeek);
-    });
-
-    // Mini calendar
-    const calTitle = $('#calTitle');
-    const calendarGrid = $('#calendarGrid');
-
-    function buildCalendar(date){
-      const year = date.getFullYear();
-      const month = date.getMonth();
-      const first = new Date(year, month, 1);
-      const last = new Date(year, month + 1, 0);
-      const startDow = (first.getDay() + 6) % 7; // Monday-first
-      const daysInMonth = last.getDate();
-
-      calTitle.textContent = new Intl.DateTimeFormat(undefined, { month: 'long', year: 'numeric' }).format(date);
-
-      calendarGrid.innerHTML = '';
-      const dows = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-      dows.forEach(d=>{
-        const el = document.createElement('div');
-        el.className = 'dow';
-        el.textContent = d;
-        calendarGrid.appendChild(el);
-      });
-
-      // Fill blanks
-      for(let i=0;i<startDow;i++){
-        const blank = document.createElement('div');
-        blank.style.opacity = '0';
-        calendarGrid.appendChild(blank);
-      }
-
-      // Fake event days (modern dashboard feel)
-      const eventDays = new Set([4, 10, 15, 22, 28].filter(d => d <= daysInMonth));
-
-      const today = new Date();
-      const isSameMonth = today.getFullYear() === year && today.getMonth() === month;
-
-      for(let day=1; day<=daysInMonth; day++){
-        const el = document.createElement('div');
-        const isToday = isSameMonth && day === today.getDate();
-        el.className = 'day' + (isToday ? ' isToday' : '') + (eventDays.has(day) ? ' hasEvent' : '');
-        el.textContent = day;
-        el.setAttribute('role','gridcell');
-        el.setAttribute('aria-label', `${day} ${new Intl.DateTimeFormat(undefined, { month: 'long' }).format(date)}`);
-        calendarGrid.appendChild(el);
-      }
-    }
-    buildCalendar(new Date());
-
-    $('#calJumpBtn').addEventListener('click', ()=> buildCalendar(new Date()));
-
-    // Focus mode toggle (keeps theme colors but tightens contrast + reduces background noise)
-    const themeBtn = $('#themeBtn');
-    let focusMode = false;
-    themeBtn.addEventListener('click', ()=>{
-      focusMode = !focusMode;
-      document.documentElement.style.setProperty('--surface', focusMode ? 'rgba(255,255,255,.88)' : 'rgba(255,255,255,.78)');
-      document.documentElement.style.setProperty('--surface-2', focusMode ? 'rgba(255,255,255,.70)' : 'rgba(255,255,255,.58)');
-      document.body.style.background = focusMode
-        ? `radial-gradient(1000px 700px at 18% 12%, rgba(77,184,255,.18), transparent 55%),
-           radial-gradient(800px 600px at 88% 10%, rgba(11,43,102,.10), transparent 60%),
-           linear-gradient(180deg, #fbfdff 0%, #f6f9ff 60%, #f6f9ff 100%)`
-        : '';
-    });
-
-    // Buttons: demo interactions
-    function toast(msg){
-      // Minimal, accessible-ish status message (no external libs)
-      const live = document.createElement('div');
-      live.setAttribute('role','status');
-      live.setAttribute('aria-live','polite');
-      live.style.position = 'fixed';
-      live.style.left = '50%';
-      live.style.bottom = '18px';
-      live.style.transform = 'translateX(-50%)';
-      live.style.zIndex = '80';
-      live.style.padding = '.85rem 1rem';
-      live.style.borderRadius = '16px';
-      live.style.border = '1px solid rgba(7,26,58,.14)';
-      live.style.background = 'rgba(255,255,255,.86)';
-      live.style.boxShadow = '0 22px 60px rgba(7,26,58,.18)';
-      live.style.backdropFilter = 'blur(12px)';
-      live.style.color = 'rgba(7,26,58,.92)';
-      live.style.fontWeight = '600';
-      live.style.maxWidth = 'min(560px, 92vw)';
-      live.style.textAlign = 'center';
-      live.textContent = msg;
-      document.body.appendChild(live);
-      setTimeout(()=>{ live.style.opacity = '0'; live.style.transition = 'opacity .35s ease'; }, 1400);
-      setTimeout(()=> live.remove(), 1900);
-    }
-
-    $('#quickSubmitBtn').addEventListener('click', ()=> toast('Quick submission opened (demo). Add your upload flow here.'));
-    $('#downloadBtn').addEventListener('click', ()=> toast('Downloading student report (demo).'));
-    $('#notifyBtn').addEventListener('click', ()=> toast('You have 5 unread notifications (demo).'));
-    $('#helpBtn').addEventListener('click', ()=> toast('Help center opened (demo).'));
-    $('#payNowBtn').addEventListener('click', ()=> toast('Payment flow would start here (demo).'));
-    $('#reserveBtn').addEventListener('click', ()=> toast('Book reserved (demo).'));
-    $('#newMsgBtn').addEventListener('click', ()=> toast('Compose message (demo).'));
-    $('#addEventBtn').addEventListener('click', ()=> toast('Add event / class (demo).'));
-    $('#markReadBtn').addEventListener('click', ()=> toast('Announcements marked as read (demo).'));
-    $('#openResultsBtn').addEventListener('click', ()=> toast('Opening results page (demo).'));
-
-    // Update due count based on simple search term (tiny "modern" touch)
-    const dueCount = $('#dueCount');
-    searchInput.addEventListener('input', ()=>{
-      const q = searchInput.value.toLowerCase().trim();
-      // If searching "assignment", show more context
-      if(q.includes('assignment') || q.includes('due')){
-        dueCount.textContent = '2';
-      } else if(q.includes('library')){
-        dueCount.textContent = '1';
-      } else {
-        dueCount.textContent = '2';
-      }
-    });
-
-    // IntersectionObserver scroll reveal
-    const ioEls = $$('.io');
-    const io = new IntersectionObserver((entries)=>{
-      entries.forEach(entry=>{
-        if(entry.isIntersecting){
-          entry.target.classList.add('in');
-          io.unobserve(entry.target);
+    //results summary
+    const classes = ["1E","1W","2E","2W","3","4"];
+    classes.forEach(thisClass =>{
+      const percentDiv = document.getElementById(thisClass+"_percent");
+      const barFill = document.getElementById(thisClass+"_barFill");
+      const boysObj = document.getElementById(thisClass+"_boys");
+      const girlsObj = document.getElementById(thisClass+"_girls");
+      var numPassed = 0;
+      var countSat = 0;
+      var boysPassed=0;
+      var girlsPassed=0;
+      termlyData.forEach(record => {
+        if(record["class"] == thisClass){
+          if(record["status"] == "passed"){
+              numPassed++;
+              
+              if(checkSex(record["st_no"])=="M"){
+                boysPassed++;
+                }
+                if(checkSex(record["st_no"])=="F"){
+                girlsPassed++;
+                }
+                
+              
+          }
+          
+          countSat++;
         }
       });
-    }, { threshold: 0.12 });
-    ioEls.forEach(el=> io.observe(el));
-
-    // Close sidebar when navigating on mobile
-    $$('.nav a').forEach(a=>{
-      a.addEventListener('click', ()=>{
-        // set aria-current
-        $$('.nav a').forEach(x=> x.removeAttribute('aria-current'));
-        a.setAttribute('aria-current','page');
-        if(window.matchMedia('(max-width: 900px)').matches) closeSidebar();
-      });
+      var displayCent = Math.round((numPassed/countSat)*100);
+      percentDiv.textContent = displayCent+"%";
+      barFill.style.width = displayCent+"%";
+      if(boysPassed == 0){
+        boysObj.textContent ="";
+        girlsObj.textContent = "";
+      }else{
+        boysObj.textContent =boysPassed;
+        girlsObj.textContent = girlsPassed;
+      }
+      
     });
+    function checkSex(st_no){
+      var theSex ="";
+      students.forEach(each => {
+        if(st_no == each["st_no"]){
+          theSex = each["st_sex"];
+          
+        }
+      });
+      return theSex;
 
-    // Seed "Next class" pill with first schedule item
-    if(scheduleToday.length){
-      $('#nextClassPill').innerHTML = `Next class: <strong>${scheduleToday[0].title}</strong>`;
     }
   </script>
 </body>
