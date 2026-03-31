@@ -189,6 +189,16 @@
     .grade.C { background: var(--silver); color: var(--navy); }
     .grade.D { background: var(--warn); }
     .grade.F { background: var(--bad); }
+    .grade.one { background: var(--good); }
+    .grade.two { background: var(--good); }
+    .grade.three { background: var(--sky); color: var(--navy); }
+    .grade.four { background: var(--sky); color: var(--navy); }
+    .grade.five { background: var(--silver); color: var(--navy); }
+    .grade.six { background: var(--silver); color: var(--navy); }
+    .grade.seven { background: var(--warn); }
+    .grade.eight { background: var(--warn); }
+    .grade.nine { background: var(--bad); }
+    .grade.dash { background: var(--bad); }
 
     .passed { 
       background-color: var(--good);
@@ -330,6 +340,7 @@
       position: sticky;
       top:0px;
       z-index: 10;
+      
     }
     .st_details h2 {
       margin: 0;
@@ -356,7 +367,7 @@
     <h2 id="st_name">Tiyesele Koding</h2>
       <div class="summary" ><label>Exam No:</label><div id="st_no"></div></div>
       <div class="summary" ><label>Sex:</label><div id="st_sex"></div></div>
-      <div class="summary" ><label>DoB:</label><div id="st_dob"></div></div>
+      
   </section><br>
 
   <div class="container" role="main" aria-label="Student results dashboard">
@@ -392,7 +403,7 @@
     <section class="studentInfo" aria-label="Student information">
       <div class="summary" ><label>Class:</label><div id="class"></div></div>
       <div class="summary" ><label>Position:</label><div id="class_rank"></div></div>
-      <div class="summary" ><label>Average:</label><div id="class_grade"></div></div>
+      <div class="summary" ><label id = "aggregate">Average:</label><div id="class_grade"></div></div>
       <div class="summary" ><label>Status:</label><div id="status"></div></div>
     </section>
    
@@ -406,14 +417,17 @@
     const studentName = document.getElementById("st_name");
     const studentNo = document.getElementById("st_no");
     const studentSex = document.getElementById("st_sex");
-    const studentDob = document.getElementById("st_dob");
-  
+    
+  const sexLabel = {
+    "M":"Male",
+    "F": "Female"
+  }
     students.forEach(element => {
           if(element["st_no"] == gotV){
             studentName.textContent = element["st_name"];
             studentNo.textContent = element["st_no"];
-            studentSex.textContent = element["st_sex"];
-            studentDob.textContent = element["st_dob"];
+            studentSex.textContent = sexLabel[element["st_sex"]];
+            
           }
         });
 const subjects = ["agr","bib","bio","che","chi","com","eng","geo","his","mat","phy","soc"];
@@ -422,41 +436,93 @@ const subjectsNames ={
   "chi":"Chichewa","com":"Computer Studies","eng":"English","geo":"Geography",
   "his": "History","mat":"Mathematics","phy":"Physics","soc":"Social & Life"
 };
-const comments = {
-  "A":"Keep it up. don't relax",
-  "B":"Aim at better than this",
-  "C":"Has potential to beat this",
-  "D":"Extra effort still needed",
-  "F":"Work very hard to improve",
-}
+
 const tbody = document.getElementById('resultsBody');
       tbody.innerHTML = '';   
 termlyData.forEach(element => {
         if(element["st_no"] == gotV){
+          if(element["class"]== 3 || element["class"]== 4){
+            const aggr = document.getElementById("aggregate");
+            aggr.textContent = "Aggragete Points";
+            const comments = {
+              "1":"Excellent! keep it up",
+              "2":"Excellent! keep it up",
+              "3":"Good! but aim higher",
+              "4":"Good! but aim higher",
+              "5":"Can do better than this",
+              "6":"Can do better than this",
+              "7":"be ambitious",
+              "8":"extra effort still needed",
+              "9":"work hard to improve ",
+              
+            }
+            const styleGrades = {
+              
+              "1":"one",
+              "2":"two",
+              "3":"three",
+              "4":"four",
+              "5":"five",
+              "6":"six",
+              "7":"seven",
+              "8":"eight",
+              "9":"nine",
+          
+            }
+            subjects.forEach( subject =>{
+            const tr = document.createElement('tr');
+            if(element["class"]== 4){
+                  if(element[subject] >= 0 && subject != "com"){
+                  tr.innerHTML = `
+                  <td class="subject">${subjectsNames[subject]}</td>
+                  <td class="score">${element[subject]}%</td>
+                  <td class="position">${element[subject+"_rank"]}/107</td>
+                  <td><span class= "grade ${styleGrades[element[subject+"_grade"]]}">${element[subject+"_grade"]}</span></td>
+                  <td class="comments">${comments[element[subject+"_grade"]]}</td>
+                  <td class="teacher"></td>
+                `;
+                tbody.appendChild(tr);
+                }
+            }else{
+              if(element[subject] >= 0 ){
+                  tr.innerHTML = `
+                  <td class="subject">${subjectsNames[subject]}</td>
+                  <td class="score">${element[subject]}%</td>
+                  <td class="position">${element[subject+"_rank"]}/107</td>
+                  <td><span class= "grade ${styleGrades[element[subject+"_grade"]]}">${element[subject+"_grade"]}</span></td>
+                  <td class="comments">${comments[element[subject+"_grade"]]}</td>
+                  <td class="teacher"></td>
+                `;
+                tbody.appendChild(tr);
+                }
+
+            }
+              
+          });
+
           subjects.forEach( subject =>{
-            if(element[subject] != "-"){
-              const tr = document.createElement('tr');
-            tr.innerHTML = `
-              <td class="subject">${subjectsNames[subject]}</td>
-              <td class="score">${element[subject]}%</td>
-              <td class="position">${element[subject+"_rank"]}/107</td>
-              <td><span class="grade ${element[subject+"_grade"]}">${element[subject+"_grade"]}</span></td>
-              <td class="comments">${comments[element[subject+"_grade"]]}</td>
-              <td class="teacher"></td>
-            `;
-            tbody.appendChild(tr);
-      }else{
-              const tr = document.createElement('tr');
-            tr.innerHTML = `
-              <td class="subject">${subjectsNames[subject]}</td>
-              <td class="score"> - </td>
-              <td class="position"> - </td>
-              <td><span class="grade"> - </span></td>
-              <td class="comments">did not write</td>
-              <td class="teacher"></td>
-            `;
-            tbody.appendChild(tr);
-      }
+            
+            const tr = document.createElement('tr');
+              if(element[subject] =="-"){
+                tr.style.backgroundColor = "#f9d5d5ea";
+                tr.innerHTML = `
+                <td class="subject">${subjectsNames[subject]}</td>
+                <td class="comments" colspan = "5">Did not write</td>
+                
+              `;
+              tbody.appendChild(tr);
+              }
+          });
+           subjects.forEach( subject =>{
+            const tr = document.createElement('tr');
+              if(element[subject] =="--"){
+                tr.style.backgroundColor = "#e2eefaea";
+                tr.innerHTML = `
+                <td class="subject">${subjectsNames[subject]}</td>
+                <td class="comments" colspan = "5">Does not take</td>
+              `;
+              tbody.appendChild(tr); 
+              }
           });
             
           const classN = document.getElementById('class');
@@ -472,7 +538,43 @@ termlyData.forEach(element => {
             }else{
               theStatus.classList.add("failed");
             }
-              }
+          }else{
+            const comments = {
+              "A":"Keep it up. don't relax",
+              "B":"Aim at better than this",
+              "C":"Has potential to beat this",
+              "D":"Extra effort still needed",
+              "F":"Work very hard to improve",
+            }
+            subjects.forEach( subject =>{
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+              <td class="subject">${subjectsNames[subject]}</td>
+              <td class="score">${element[subject]}%</td>
+              <td class="position">${element[subject+"_rank"]}/107</td>
+              <td><span class="grade ${element[subject+"_grade"]}">${element[subject+"_grade"]}</span></td>
+              <td class="comments">${comments[element[subject+"_grade"]]}</td>
+              <td class="teacher"></td>
+            `;
+            tbody.appendChild(tr);
+          });
+            
+          const classN = document.getElementById('class');
+          const position = document.getElementById('class_rank');
+          const classG = document.getElementById('class_grade');
+          const theStatus = document.getElementById('status');
+          classN.textContent = element['class'];
+          position.textContent = element['class_rank']+"/107";
+          classG.textContent = element['class_grade'];
+          theStatus.textContent = element['status'];
+            if(element['status'] == "passed"){
+              theStatus.classList.add("passed");
+            }else{
+              theStatus.classList.add("failed");
+            }
+          }
+          
+        }
       
       });
   </script>
