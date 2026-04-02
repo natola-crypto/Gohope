@@ -473,7 +473,7 @@ termlyData.forEach(element => {
                   <td class="position">${element[subject+"_rank"]}/${getTotal(element["class"], subject)}</td>
                   <td><span class= "grade ${styleGrades[element[subject+"_grade"]]}">${element[subject+"_grade"]}</span></td>
                   <td class="comments">${comments[element[subject+"_grade"]]}</td>
-                  <td class="teacher"></td>
+                  
                 `;
                 tbody.appendChild(tr);
                 }
@@ -485,7 +485,7 @@ termlyData.forEach(element => {
                   <td class="position">${element[subject+"_rank"]}/${getTotal(element["class"], subject)}</td>
                   <td><span class= "grade ${styleGrades[element[subject+"_grade"]]}">${element[subject+"_grade"]}</span></td>
                   <td class="comments">${comments[element[subject+"_grade"]]}</td>
-                  <td class="teacher"></td>
+                  
                 `;
                 tbody.appendChild(tr);
                 }
@@ -501,7 +501,7 @@ termlyData.forEach(element => {
                 tr.style.backgroundColor = "#f9d5d5ea";
                 tr.innerHTML = `
                 <td class="subject">${subjectsNames[subject]}</td>
-                <td class="comments" colspan = "5">Did not write</td>
+                <td class="comments" colspan = "4">Did not write</td>
                 
               `;
               tbody.appendChild(tr);
@@ -513,7 +513,7 @@ termlyData.forEach(element => {
                 tr.style.backgroundColor = "#e2eefaea";
                 tr.innerHTML = `
                 <td class="subject">${subjectsNames[subject]}</td>
-                <td class="comments" colspan = "5">Does not take</td>
+                <td class="comments" colspan = "4">Does not take</td>
               `;
               tbody.appendChild(tr); 
               }
@@ -547,7 +547,7 @@ termlyData.forEach(element => {
                 <td class="position">${element[subject+"_rank"]}/${getTotal(element["class"], subject)}</td>
                 <td><span class="grade ${element[subject+"_grade"]}">${element[subject+"_grade"]}</span></td>
                 <td class="comments">${comments[element[subject+"_grade"]]}</td>
-                <td class="teacher"></td>
+                
               `;
               tbody.appendChild(tr);
             }
@@ -558,7 +558,7 @@ termlyData.forEach(element => {
                 tr.style.backgroundColor = "#f9d5d5ea";
                 tr.innerHTML = `
                 <td class="subject">${subjectsNames[subject]}</td>
-                <td class="comments" colspan = "5">Did not write</td>
+                <td class="comments" colspan = "4">Did not write</td>
                 
               `;
               tbody.appendChild(tr);
