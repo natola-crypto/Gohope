@@ -399,7 +399,7 @@
     </section>
    
 
-    <div id="noResults" class="noResults" style="color:var(--navy-2)"> For more assistance contact the ICT officer on whatsapp <strong>0996790796</strong></div>
+    <div id="noResults" class="noResults" style="color:var(--navy-2)"> For any assistance contact the ICT officer on whatsapp <strong>0996790796</strong></div>
   </div>
   <script src="term1_data.js"></script>
   <script>
@@ -525,7 +525,7 @@ termlyData.forEach(element => {
           const classN = document.getElementById('class');
           const classG = document.getElementById('class_grade');
           const theStatus = document.getElementById('status');
-          classN.textContent = element['class'];
+          classN.textContent = "Form "+element['class'];
           classG.textContent = element['class_grade'];
           theStatus.textContent = element['status'];
             if(element['status'] == "passed"){
