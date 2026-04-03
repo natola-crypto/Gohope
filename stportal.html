@@ -366,7 +366,7 @@
   <section class="st_details">
     <h2 id="st_name">Tiyesele Koding</h2>
       <div class="summary" ><label>Exam No:</label><div id="st_no"></div></div>
-      <div class="summary" ><label>Sex:</label><div id="st_sex"></div></div>
+      <div class="summary" id="the_sex" ><label>Sex:</label><div id="st_sex"></div></div>
       
   </section><br>
 
@@ -408,6 +408,7 @@
     const studentName = document.getElementById("st_name");
     const studentNo = document.getElementById("st_no");
     const studentSex = document.getElementById("st_sex");
+    const studSex = document.getElementById("the_sex");
     
   const sexLabel = {
     "M":"Male",
@@ -418,7 +419,9 @@
             studentName.textContent = element["st_name"];
             studentNo.textContent = element["st_no"];
             studentSex.textContent = sexLabel[element["st_sex"]];
-            
+            if(element["st_sex"]==""){
+              studSex.style.display = "none";
+            }
           }
         });
 const subjects = ["agr","bib","bio","che","chi","com","eng","geo","his","mat","phy","soc"];
@@ -436,7 +439,7 @@ termlyData.forEach(element => {
           studentFound = true;
           if(element["class"]== 3 || element["class"]== 4){
             const aggr = document.getElementById("aggregate");
-            aggr.textContent = "Aggragete Points";
+            aggr.textContent = "Aggragete Points:";
             const comments = {
               "1":"Excellent! keep it up",
               "2":"Excellent! keep it up",
@@ -570,7 +573,7 @@ termlyData.forEach(element => {
           
           const classG = document.getElementById('class_grade');
           const theStatus = document.getElementById('status');
-          classN.textContent = element['class'];
+          classN.textContent = "Form "+element['class'];
           
           classG.textContent = element['class_grade'];
           theStatus.textContent = element['status'];
