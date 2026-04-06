@@ -7,43 +7,51 @@
 <style>
   body {
     font-family: Arial, sans-serif;
-    background-color: #001f4d; /* dark blue */
-    color: silver;
-    margin: 0; padding: 20px;
+    background-color: #e6f2ff; /* light sky blue */
+    color: #555555; /* dark gray text */
+    margin: 0; 
+    padding: 20px;
   }
   h1 {
-    color: #87ceeb; /* sky blue */
+    color: #003366; /* dark blue */
     margin-bottom: 20px;
   }
   label {
     margin-right: 8px;
+    font-weight: bold;
+    color: #003366;
   }
   select, button {
-    background-color: #87ceeb;
+    background-color: #003366; /* dark blue */
     border: none;
-    padding: 8px 12px;
+    padding: 8px 14px;
     margin-right: 10px;
-    border-radius: 4px;
-    color: #001f4d;
+    border-radius: 5px;
+    color: #ffffff;
     font-weight: bold;
     cursor: pointer;
+    transition: background-color 0.3s ease;
   }
   select:hover, button:hover {
-    background-color: #b0e0ff;
+    background-color: #0059b3; /* brighter blue */
   }
   table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
-    color: silver;
+    color: #333333; /* dark text for readability */
+    background-color: #ffffff; /* white background for table */
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
   }
   th, td {
-    border: 1px solid silver;
-    padding: 8px;
+    border: 1px solid #c0c0c0; /* silver/light gray border */
+    padding: 10px;
     text-align: center;
   }
   th {
-    background-color: #003366; /* darker blue */
+    background-color: #87ceeb; /* sky blue */
+    color: #003366; /* dark blue text */
+    font-weight: bold;
   }
   .controls {
     margin-bottom: 10px;
@@ -58,6 +66,10 @@
   }
   #subjectButtons button {
     margin: 0 5px 5px 0;
+    background-color: #0059b3;
+  }
+  #subjectButtons button:hover {
+    background-color: #0073e6;
   }
 </style>
 </head>
@@ -84,7 +96,6 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
-  // Data from your example
   var termlyData = [
     {"row_id":"332","st_no":"25001","class":"1E","bib":"-","bio":"-","che":"-","chi":"-","com":"-","eng":"-","geo":"-","his":"-","mat":"-","phy":"-","soc":"-","agr_rank":"-","bib_rank":"-","bio_rank":"-","che_rank":"-","chi_rank":"-","com_rank":"-","eng_rank":"-","geo_rank":"-","his_rank":"-","mat_rank":"-","phy_rank":"-","soc_rank":"-","agr_grade":"-","bib_grade":"-","bio_grade":"-","che_grade":"-","chi_grade":"-","com_grade":"-","eng_grade":"-","geo_grade":"-","his_grade":"-","mat_grade":"-","phy_grade":"-","soc_grade":"-","class_grade":"0","status":"","class_rank":"103","agr":"-"},
     {"row_id":"333","st_no":"25002","class":"1E","bib":"58","bio":"70","che":"53","chi":"50","com":"62","eng":"40","geo":"44","his":"40","mat":"40","phy":"53","soc":"33","agr_rank":"47","bib_rank":"46","bio_rank":"36","che_rank":"56","chi_rank":"81","com_rank":"40","eng_rank":"53","geo_rank":"53","his_rank":"69","mat_rank":"33","phy_rank":"44","soc_rank":"74","agr_grade":"D","bib_grade":"C","bio_grade":"C","che_grade":"D","chi_grade":"D","com_grade":"C","eng_grade":"D","geo_grade":"D","his_grade":"D","mat_grade":"D","phy_grade":"D","soc_grade":"F","class_grade":"50","status":"passed","class_rank":"38","agr":"51"},
@@ -92,10 +103,8 @@
     {"row_id":"335","st_no":"25064","class":"1E","bib":"57","bio":"65","che":"79","chi":"36","com":"52","eng":"42","geo":"54","his":"49","mat":"17","phy":"47","soc":"53","agr_rank":"13","bib_rank":"49","bio_rank":"45","che_rank":"8","chi_rank":"92","com_rank":"62","eng_rank":"45","geo_rank":"28","his_rank":"54","mat_rank":"84","phy_rank":"63","soc_rank":"23","agr_grade":"C","bib_grade":"C","bio_grade":"C","che_grade":"B","chi_grade":"F","com_grade":"D","eng_grade":"D","geo_grade":"D","his_grade":"D","mat_grade":"F","phy_grade":"D","soc_grade":"D","class_grade":"52","status":"passed","class_rank":"30","agr":"68"}
   ];
 
-  // Subjects list
   const subjects = ["agr", "bib", "bio", "che", "chi", "com", "eng", "geo", "his", "mat", "phy", "soc"];
 
-  // Teachers per subject
   const teachers = {
     agr: "Mr. Smith",
     bib: "Mrs. Johnson",
@@ -111,13 +120,11 @@
     soc: "Ms. Clark"
   };
 
-  // State variables
   let currentClass = "1E";
   let currentView = "allSubjects";
   let currentSubject = null;
   let showingClassList = false;
 
-  // Initialize UI
   function init() {
     const classSelect = document.getElementById("classSelect");
     const classSet = new Set(termlyData.map(d => d.class));
@@ -149,7 +156,6 @@
     renderView();
   }
 
-  // Render main view
   function renderView() {
     document.getElementById("subjectButtons").innerHTML = "";
     document.getElementById("tableContainer").innerHTML = "";
@@ -163,7 +169,6 @@
     }
   }
 
-  // Render all subjects view with subject buttons and table
   function renderAllSubjectsView() {
     const subjectButtonsDiv = document.getElementById("subjectButtons");
     subjects.forEach(sub => {
@@ -179,14 +184,12 @@
     renderAllSubjectsTable();
   }
 
-  // Render table for all subjects (default view)
   function renderAllSubjectsTable() {
     const filteredData = termlyData.filter(d => d.class === currentClass);
     const table = document.createElement("table");
     const thead = document.createElement("thead");
     const tbody = document.createElement("tbody");
 
-    // Header
     const headerRow = document.createElement("tr");
     headerRow.appendChild(createCell("th", "Student No"));
     subjects.forEach(sub => headerRow.appendChild(createCell("th", sub.toUpperCase())));
@@ -194,7 +197,6 @@
     headerRow.appendChild(createCell("th", "Status"));
     thead.appendChild(headerRow);
 
-    // Rows
     filteredData.forEach(student => {
       const row = document.createElement("tr");
       row.appendChild(createCell("td", student.st_no));
@@ -212,7 +214,6 @@
     document.getElementById("tableContainer").appendChild(table);
   }
 
-  // Render subject-specific view (picture 2)
   function renderSubjectView() {
     const filteredData = termlyData.filter(d => d.class === currentClass && d[currentSubject] !== "-");
     filteredData.sort((a, b) => Number(a[`${currentSubject}_rank`]) - Number(b[`${currentSubject}_rank`]));
@@ -221,7 +222,6 @@
     const thead = document.createElement("thead");
     const tbody = document.createElement("tbody");
 
-    // Header (4 columns)
     const headerRow = document.createElement("tr");
     headerRow.appendChild(createCell("th", "Student No"));
     headerRow.appendChild(createCell("th", "Score"));
@@ -229,7 +229,6 @@
     headerRow.appendChild(createCell("th", "Position"));
     thead.appendChild(headerRow);
 
-    // Rows
     filteredData.forEach(student => {
       const row = document.createElement("tr");
       row.appendChild(createCell("td", student.st_no));
@@ -242,7 +241,6 @@
     table.appendChild(thead);
     table.appendChild(tbody);
 
-    // Add Class List button
     const subjectButtonsDiv = document.getElementById("subjectButtons");
     subjectButtonsDiv.innerHTML = "";
     const classListBtn = document.createElement("button");
@@ -258,7 +256,6 @@
     tableContainer.appendChild(table);
   }
 
-  // Render class list summary (picture 4)
   function renderClassList() {
     if (!currentSubject) return;
     const filteredData = termlyData.filter(d => d.class === currentClass && d[currentSubject] !== "-");
@@ -299,7 +296,6 @@
     tableContainer.appendChild(table);
   }
 
-  // Render class summary view (picture 3)
   function renderClassSummary() {
     const filteredData = termlyData.filter(d => d.class === currentClass);
 
@@ -343,7 +339,6 @@
     tableContainer.appendChild(table);
   }
 
-  // Helpers
   function createCell(type, text) {
     const cell = document.createElement(type);
     cell.textContent = text;
@@ -357,7 +352,6 @@
     tbody.appendChild(row);
   }
 
-  // PDF Download using jsPDF
   async function downloadPdf() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
@@ -372,7 +366,7 @@
       await loadAutoTable();
     }
 
-    doc.autoTable({ html: table, theme: 'grid', styles: { textColor: '#001f4d' }, headStyles: { fillColor: '#87ceeb' } });
+    doc.autoTable({ html: table, theme: 'grid', styles: { textColor: '#003366' }, headStyles: { fillColor: '#87ceeb' } });
     doc.save("table.pdf");
   }
 
@@ -386,7 +380,6 @@
     });
   }
 
-  // Initialize app
   init();
 </script>
 
