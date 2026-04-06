@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Teacher Portal</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #001f4d; /* dark blue */
+    color: silver;
+    margin: 0; padding: 20px;
+  }
+  h1 {
+    color: #87ceeb; /* sky blue */
+    margin-bottom: 20px;
+  }
+  label {
+    margin-right: 8px;
+  }
+  select, button {
+    background-color: #87ceeb;
+    border: none;
+    padding: 8px 12px;
+    margin-right: 10px;
+    border-radius: 4px;
+    color: #001f4d;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  select:hover, button:hover {
+    background-color: #b0e0ff;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    color: silver;
+  }
+  th, td {
+    border: 1px solid silver;
+    padding: 8px;
+    text-align: center;
+  }
+  th {
+    background-color: #003366; /* darker blue */
+  }
+  .controls {
+    margin-bottom: 10px;
+  }
+  .right-button {
+    float: right;
+  }
+  .clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+  }
+  #subjectButtons button {
+    margin: 0 5px 5px 0;
+  }
+</style>
+</head>
+<body>
+
+<h1>Teacher Portal</h1>
+
+<div class="controls clearfix">
+  <label for="classSelect">Class:</label>
+  <select id="classSelect"></select>
+
+  <label for="viewSelect">View:</label>
+  <select id="viewSelect">
+    <option value="allSubjects">All Subjects</option>
+    <option value="classSummary">Class Summary</option>
+  </select>
+
+  <button id="downloadPdf" class="right-button">Download PDF</button>
+</div>
+
+<div id="subjectButtons"></div>
+
+<div id="tableContainer"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+  // Data from your example
+  var termlyData = [
+    {"row_id":"332","st_no":"25001","class":"1E","bib":"-","bio":"-","che":"-","chi":"-","com":"-","eng":"-","geo":"-","his":"-","mat":"-","phy":"-","soc":"-","agr_rank":"-","bib_rank":"-","bio_rank":"-","che_rank":"-","chi_rank":"-","com_rank":"-","eng_rank":"-","geo_rank":"-","his_rank":"-","mat_rank":"-","phy_rank":"-","soc_rank":"-","agr_grade":"-","bib_grade":"-","bio_grade":"-","che_grade":"-","chi_grade":"-","com_grade":"-","eng_grade":"-","geo_grade":"-","his_grade":"-","mat_grade":"-","phy_grade":"-","soc_grade":"-","class_grade":"0","status":"","class_rank":"103","agr":"-"},
+    {"row_id":"333","st_no":"25002","class":"1E","bib":"58","bio":"70","che":"53","chi":"50","com":"62","eng":"40","geo":"44","his":"40","mat":"40","phy":"53","soc":"33","agr_rank":"47","bib_rank":"46","bio_rank":"36","che_rank":"56","chi_rank":"81","com_rank":"40","eng_rank":"53","geo_rank":"53","his_rank":"69","mat_rank":"33","phy_rank":"44","soc_rank":"74","agr_grade":"D","bib_grade":"C","bio_grade":"C","che_grade":"D","chi_grade":"D","com_grade":"C","eng_grade":"D","geo_grade":"D","his_grade":"D","mat_grade":"D","phy_grade":"D","soc_grade":"F","class_grade":"50","status":"passed","class_rank":"38","agr":"51"},
+    {"row_id":"334","st_no":"25003","class":"1E","bib":"71","bio":"61","che":"47","chi":"45","com":"41","eng":"32","geo":"38","his":"45","mat":"29","phy":"45","soc":"41","agr_rank":"50","bib_rank":"9","bio_rank":"52","che_rank":"68","chi_rank":"88","com_rank":"77","eng_rank":"82","geo_rank":"66","his_rank":"61","mat_rank":"63","phy_rank":"71","soc_rank":"53","agr_grade":"D","bib_grade":"B","bio_grade":"C","che_grade":"D","chi_grade":"D","com_grade":"D","eng_grade":"F","geo_grade":"F","his_grade":"D","mat_grade":"F","phy_grade":"D","soc_grade":"D","class_grade":"45","status":"failed","class_rank":"74","agr":"50"},
+    {"row_id":"335","st_no":"25064","class":"1E","bib":"57","bio":"65","che":"79","chi":"36","com":"52","eng":"42","geo":"54","his":"49","mat":"17","phy":"47","soc":"53","agr_rank":"13","bib_rank":"49","bio_rank":"45","che_rank":"8","chi_rank":"92","com_rank":"62","eng_rank":"45","geo_rank":"28","his_rank":"54","mat_rank":"84","phy_rank":"63","soc_rank":"23","agr_grade":"C","bib_grade":"C","bio_grade":"C","che_grade":"B","chi_grade":"F","com_grade":"D","eng_grade":"D","geo_grade":"D","his_grade":"D","mat_grade":"F","phy_grade":"D","soc_grade":"D","class_grade":"52","status":"passed","class_rank":"30","agr":"68"}
+  ];
+
+  // Subjects list
+  const subjects = ["agr", "bib", "bio", "che", "chi", "com", "eng", "geo", "his", "mat", "phy", "soc"];
+
+  // Teachers per subject
+  const teachers = {
+    agr: "Mr. Smith",
+    bib: "Mrs. Johnson",
+    bio: "Dr. Lee",
+    che: "Ms. Davis",
+    chi: "Mr. Brown",
+    com: "Mrs. Wilson",
+    eng: "Ms. Taylor",
+    geo: "Mr. Anderson",
+    his: "Mrs. Thomas",
+    mat: "Mr. Martinez",
+    phy: "Dr. Robinson",
+    soc: "Ms. Clark"
+  };
+
+  // State variables
+  let currentClass = "1E";
+  let currentView = "allSubjects";
+  let currentSubject = null;
+  let showingClassList = false;
+
+  // Initialize UI
+  function init() {
+    const classSelect = document.getElementById("classSelect");
+    const classSet = new Set(termlyData.map(d => d.class));
+    classSelect.innerHTML = "";
+    classSet.forEach(cls => {
+      const option = document.createElement("option");
+      option.value = cls;
+      option.textContent = cls;
+      classSelect.appendChild(option);
+    });
+    classSelect.value = currentClass;
+
+    classSelect.addEventListener("change", e => {
+      currentClass = e.target.value;
+      currentSubject = null;
+      showingClassList = false;
+      renderView();
+    });
+
+    document.getElementById("viewSelect").addEventListener("change", e => {
+      currentView = e.target.value;
+      currentSubject = null;
+      showingClassList = false;
+      renderView();
+    });
+
+    document.getElementById("downloadPdf").addEventListener("click", downloadPdf);
+
+    renderView();
+  }
+
+  // Render main view
+  function renderView() {
+    document.getElementById("subjectButtons").innerHTML = "";
+    document.getElementById("tableContainer").innerHTML = "";
+    showingClassList = false;
+    currentSubject = null;
+
+    if (currentView === "allSubjects") {
+      renderAllSubjectsView();
+    } else if (currentView === "classSummary") {
+      renderClassSummary();
+    }
+  }
+
+  // Render all subjects view with subject buttons and table
+  function renderAllSubjectsView() {
+    const subjectButtonsDiv = document.getElementById("subjectButtons");
+    subjects.forEach(sub => {
+      const btn = document.createElement("button");
+      btn.textContent = sub.toUpperCase();
+      btn.addEventListener("click", () => {
+        currentSubject = sub;
+        showingClassList = false;
+        renderSubjectView();
+      });
+      subjectButtonsDiv.appendChild(btn);
+    });
+    renderAllSubjectsTable();
+  }
+
+  // Render table for all subjects (default view)
+  function renderAllSubjectsTable() {
+    const filteredData = termlyData.filter(d => d.class === currentClass);
+    const table = document.createElement("table");
+    const thead = document.createElement("thead");
+    const tbody = document.createElement("tbody");
+
+    // Header
+    const headerRow = document.createElement("tr");
+    headerRow.appendChild(createCell("th", "Student No"));
+    subjects.forEach(sub => headerRow.appendChild(createCell("th", sub.toUpperCase())));
+    headerRow.appendChild(createCell("th", "Position"));
+    headerRow.appendChild(createCell("th", "Status"));
+    thead.appendChild(headerRow);
+
+    // Rows
+    filteredData.forEach(student => {
+      const row = document.createElement("tr");
+      row.appendChild(createCell("td", student.st_no));
+      subjects.forEach(sub => {
+        row.appendChild(createCell("td", student[sub] === "-" ? "" : student[sub]));
+      });
+      row.appendChild(createCell("td", student.class_rank));
+      row.appendChild(createCell("td", student.status));
+      tbody.appendChild(row);
+    });
+
+    table.appendChild(thead);
+    table.appendChild(tbody);
+    document.getElementById("tableContainer").innerHTML = "";
+    document.getElementById("tableContainer").appendChild(table);
+  }
+
+  // Render subject-specific view (picture 2)
+  function renderSubjectView() {
+    const filteredData = termlyData.filter(d => d.class === currentClass && d[currentSubject] !== "-");
+    filteredData.sort((a, b) => Number(a[`${currentSubject}_rank`]) - Number(b[`${currentSubject}_rank`]));
+
+    const table = document.createElement("table");
+    const thead = document.createElement("thead");
+    const tbody = document.createElement("tbody");
+
+    // Header (4 columns)
+    const headerRow = document.createElement("tr");
+    headerRow.appendChild(createCell("th", "Student No"));
+    headerRow.appendChild(createCell("th", "Score"));
+    headerRow.appendChild(createCell("th", "Grade"));
+    headerRow.appendChild(createCell("th", "Position"));
+    thead.appendChild(headerRow);
+
+    // Rows
+    filteredData.forEach(student => {
+      const row = document.createElement("tr");
+      row.appendChild(createCell("td", student.st_no));
+      row.appendChild(createCell("td", student[currentSubject]));
+      row.appendChild(createCell("td", student[`${currentSubject}_grade`]));
+      row.appendChild(createCell("td", student[`${currentSubject}_rank`]));
+      tbody.appendChild(row);
+    });
+
+    table.appendChild(thead);
+    table.appendChild(tbody);
+
+    // Add Class List button
+    const subjectButtonsDiv = document.getElementById("subjectButtons");
+    subjectButtonsDiv.innerHTML = "";
+    const classListBtn = document.createElement("button");
+    classListBtn.textContent = "Class List";
+    classListBtn.addEventListener("click", () => {
+      showingClassList = true;
+      renderClassList();
+    });
+    subjectButtonsDiv.appendChild(classListBtn);
+
+    const tableContainer = document.getElementById("tableContainer");
+    tableContainer.innerHTML = "";
+    tableContainer.appendChild(table);
+  }
+
+  // Render class list summary (picture 4)
+  function renderClassList() {
+    if (!currentSubject) return;
+    const filteredData = termlyData.filter(d => d.class === currentClass && d[currentSubject] !== "-");
+
+    const total = filteredData.length;
+    const passed = filteredData.filter(s => s.status === "passed").length;
+    const wrote = total;
+    const scores = filteredData.map(s => Number(s[currentSubject]));
+    const highest = Math.max(...scores);
+    const lowest = Math.min(...scores);
+    const average = (scores.reduce((a,b) => a+b, 0) / total).toFixed(2);
+
+    const gradeCounts = {};
+    filteredData.forEach(s => {
+      const g = s[`${currentSubject}_grade`];
+      if (g && g !== "-") {
+        gradeCounts[g] = (gradeCounts[g] || 0) + 1;
+      }
+    });
+
+    const table = document.createElement("table");
+    const tbody = document.createElement("tbody");
+
+    addSummaryRow(tbody, "Passed", passed);
+    addSummaryRow(tbody, "Wrote Exam", wrote);
+    addSummaryRow(tbody, "Highest Score", highest);
+    addSummaryRow(tbody, "Lowest Score", lowest);
+    addSummaryRow(tbody, "Average Score", average);
+
+    for (const [grade, count] of Object.entries(gradeCounts)) {
+      addSummaryRow(tbody, `Grade ${grade}`, count);
+    }
+
+    table.appendChild(tbody);
+
+    const tableContainer = document.getElementById("tableContainer");
+    tableContainer.innerHTML = "";
+    tableContainer.appendChild(table);
+  }
+
+  // Render class summary view (picture 3)
+  function renderClassSummary() {
+    const filteredData = termlyData.filter(d => d.class === currentClass);
+
+    const table = document.createElement("table");
+    const thead = document.createElement("thead");
+    const tbody = document.createElement("tbody");
+
+    const headerRow = document.createElement("tr");
+    headerRow.appendChild(createCell("th", "Subject"));
+    headerRow.appendChild(createCell("th", "Teacher"));
+    headerRow.appendChild(createCell("th", "Average Score"));
+    headerRow.appendChild(createCell("th", "Highest Score"));
+    headerRow.appendChild(createCell("th", "Lowest Score"));
+    thead.appendChild(headerRow);
+
+    subjects.forEach(sub => {
+      const scores = filteredData
+        .map(s => Number(s[sub]))
+        .filter(score => !isNaN(score) && score !== 0);
+
+      if (scores.length === 0) return;
+
+      const avg = (scores.reduce((a,b) => a+b, 0) / scores.length).toFixed(2);
+      const high = Math.max(...scores);
+      const low = Math.min(...scores);
+
+      const row = document.createElement("tr");
+      row.appendChild(createCell("td", sub.toUpperCase()));
+      row.appendChild(createCell("td", teachers[sub] || "N/A"));
+      row.appendChild(createCell("td", avg));
+      row.appendChild(createCell("td", high));
+      row.appendChild(createCell("td", low));
+      tbody.appendChild(row);
+    });
+
+    table.appendChild(thead);
+    table.appendChild(tbody);
+
+    const tableContainer = document.getElementById("tableContainer");
+    tableContainer.innerHTML = "";
+    tableContainer.appendChild(table);
+  }
+
+  // Helpers
+  function createCell(type, text) {
+    const cell = document.createElement(type);
+    cell.textContent = text;
+    return cell;
+  }
+
+  function addSummaryRow(tbody, label, value) {
+    const row = document.createElement("tr");
+    row.appendChild(createCell("td", label));
+    row.appendChild(createCell("td", value));
+    tbody.appendChild(row);
+  }
+
+  // PDF Download using jsPDF
+  async function downloadPdf() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    const table = document.querySelector("#tableContainer table");
+    if (!table) {
+      alert("No table to export!");
+      return;
+    }
+
+    if (!doc.autoTable) {
+      await loadAutoTable();
+    }
+
+    doc.autoTable({ html: table, theme: 'grid', styles: { textColor: '#001f4d' }, headStyles: { fillColor: '#87ceeb' } });
+    doc.save("table.pdf");
+  }
+
+  function loadAutoTable() {
+    return new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js";
+      script.onload = resolve;
+      script.onerror = reject;
+      document.head.appendChild(script);
+    });
+  }
+
+  // Initialize app
+  init();
+</script>
+
+</body>
+</html>
