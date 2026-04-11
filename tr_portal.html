@@ -387,7 +387,7 @@
       theName.textContent= getSName(student.st_no);
       theName.classList.add("the_name");
       row.appendChild(theName);
-      row.appendChild(createCell("td", student[currentSubject])+"%");
+      row.appendChild(createCell("td", student[currentSubject]+"%"));
       row.appendChild(createCell("td", student[`${currentSubject}_grade`]));
       row.appendChild(createCell("td", student[`${currentSubject}_rank`]));
       tbody.appendChild(row);
