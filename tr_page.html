@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Teacher Portal</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #e6f2ff; /* light sky blue */
+    color: #555555; /* dark gray text */
+    margin: 0; 
+    padding: 20px;
+  }
+  h1 {
+    color: #003366; /* dark blue */
+    margin-bottom: 5px;
+  }
+  h2{
+    color:#6badef;
+    margin-bottom: 50px;
+  }
+  .each_term{
+    margin: auto;
+    margin-bottom: 30px;
+    background-color: #ffffff;
+    width:fit-content;
+    padding: 15px 17px;
+    text-align: center;
+    color: #003366;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(77,184,255,.15);
+  }
+   .each_term:hover,
+  .each_term:focus-within {
+    cursor: pointer;
+    box-shadow: 0 7px 15px #3ec2f6b3;
+  }
+  .notify{
+    margin: auto;
+    margin-bottom: 30px;
+    background-color: #f2f2f2;
+    width:fit-content;
+    font-style: italic;
+    color:#003366;
+    padding: 15px 17px;
+    text-align: center;
+    border-radius: 15px;
+  }
+  
+  @media (max-width: 720px) {
+   
+  }
+</style>
+</head>
+<body>
+<div class = "container_main">
+      <h1 style="text-align: center;">Teacher Portal</h1>
+      <h2 style="text-align: center;">Natola CDSS</h2>
+    <div class = "notify">Select the termly Results you would like to access. 
+        Be reminded that the Examination Results are confidencial, 
+        do not share with unauthorised person.</div>
+    <div class = "each_term" onclick="openResults(2)">2025-2026 End of Term 2 Examination Results</div>
+    <div class = "each_term" onclick="openResults(1)">2025-2026 End of Term 1 Examination Results</div>
+</div>
+<script>
+    function openResults (term_no){
+        window.location.href = "tr_portal.html?tm="+term_no;
+    }
+</script>
+
+</body>
+</html>

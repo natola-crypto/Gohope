@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Teacher Portal</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #e6f2ff; /* light sky blue */
+    color: #555555; /* dark gray text */
+    margin: 0; 
+    padding: 20px;
+  }
+  h1 {
+    color: #003366; /* dark blue */
+    margin-bottom: 20px;
+  }
+  label {
+    margin-right: 8px;
+    font-weight: bold;
+    color: #003366;
+  }
+  select, button {
+    background-color: #003366; /* dark blue */
+    border: none;
+    padding: 8px 14px;
+    margin-right: 10px;
+    border-radius: 5px;
+    color: #ffffff;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-bottom: 5px;
+  }
+  select:hover, button:hover {
+    background-color: #0059b3; /* brighter blue */
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    color: #333333; /* dark text for readability */
+    background-color: #ffffff; /* white background for table */
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+  th, td {
+    border: 1px solid #c0c0c0; /* silver/light gray border */
+    padding: 10px;
+    text-align: center;
+  }
+  th {
+    background-color: #87ceeb; /* sky blue */
+    color: #003366; /* dark blue text */
+    font-weight: bold;
+    position: sticky;
+    top:0px;
+  }
+  .controls {
+    margin-bottom: 10px;
+    width: 80%;
+    margin: auto;
+  }
+  
+  #tableContainer{
+    width: 80%;
+    height: 80vh;
+    overflow: scroll;
+    margin: auto;
+    
+  }
+  .the_name{
+    text-align:left;
+    color:#003366;
+    font-weight: 400;
+    border-bottom: 2px solid rgb(104, 115, 160);
+    position: sticky;
+    left: 0px;
+    background-color: #f2f2f2;
+  }
+  .the_name_head{
+    position: sticky;
+    left: 0px;
+    top: 0px;
+    background-color: #87ceeb; /* sky blue */
+    color: #003366; /* dark blue text */
+    font-weight: bold;
+    z-index: 10;
+  }
+  .the_teacher{
+    text-align: left;
+    background-color: #f2f2f2;
+  }
+  .tebo_tito{
+    text-align: center;
+    font-family: centuary;
+  }
+  .absc{
+    background-color: #f2f2f2;
+  }
+  .st_grade{
+    font-weight: 700;
+    color: #003366;
+  }
+  .right-button {
+    float: right;
+  }
+  .clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+  }
+  #subjectButtons button {
+    margin: 0 5px 5px 0;
+    background-color: #0059b3;
+  }
+  #subjectButtons button:hover {
+    background-color: #0073e6;
+  }
+  @media (max-width: 720px) {
+    #tableContainer{
+    width: 100%;
+    height: 80vh;
+    overflow: scroll;
+    margin: auto;
+    
+    }
+    .tebo_tito{
+    text-align: left;
+    font-family: centuary;
+  }
+  .controls{
+    width: 100%;
+  }
+
+  }
+</style>
+</head>
+<body>
+<div class = "container_main">
+      <h1 style="text-align: center;">Teacher Portal</h1>
+    <div class="controls clearfix">
+      <label for="classSelect">Form:</label>
+      <select id="classSelect"></select>
+
+      <label for="viewSelect">View:</label>
+      <select id="viewSelect">
+        <option value="allSubjects">All Subjects</option>
+        <option value="classSummary">Class Analysis</option>
+        <option value="agr">Agriculture</option>
+        <option value="bib">Bible Knowledge</option>
+        <option value="bio">Biology</option>
+        <option value="che">Chemistry</option>
+        <option value="chi">Chichewa</option>
+        <option value="com">Computer Studies</option>
+        <option value="eng">English</option>
+        <option value="geo">Geography</option>
+        <option value="his">History</option>
+        <option value="mat">Mathematics</option>
+        <option value="phy">Physics</option>
+        <option value="soc">Social & Lifeskills</option>
+      </select>
+
+      <button id="downloadPdf" class="right-button">Download PDF</button>
+    </div>
+
+    <div id="subjectButtons"></div>
+
+    <div id="tableContainer"></div>
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="term2_data.js"></script>
+<script>
+    const getpara = new URL(window.location.href);
+    const gotM = getpara.searchParams.get("tm");
+    let termlyData = {};
+    if(gotM == 2){
+      termlyData = term2Data;
+    }else if(gotM == 1){
+      termlyData = term1Data;
+    }
+
+  const subjects = ["agr", "bib", "bio", "che", "chi", "com", "eng", "geo", "his", "mat", "phy", "soc"];
+  
+  const class1E = {
+    agr:'F. Nkhambule',
+    bib:'M. Chimbelekero',
+    bio:'L. Lobium',
+    che:'S. Malijani',
+    chi:'E. Phiri',
+    com:'B. Majamanda',
+    eng:'Chimwemwe Phiri',
+    geo:'L.Nthini',
+    his:'Chimwemwe Phiri',
+    mat:'W. Moyenda',
+    phy:'M. Tembo',
+    soc:'L.Nthini',
+  };
+  const class1W = {
+    agr:'F. John',bib:'Semu Banda',bio:'Chepani Phiri',che:'L. Lobium',chi:"A. Msang'azi",com:'H. Kwanunkhatonde',eng:'G. Sakala',geo:'G. Ngolombe',his:'G. Ngolombe',mat:'M. Mwenebungu',phy:'C. Baikolo',soc:'Semu Banda',
+  }
+  const class2E = {
+    agr:'C. Gondwe',bib:'M. Chimbelekero',bio:'S. Malijani',che:'E. Nyengere',chi:'C. Kaputa',com:'H. Kwanunkhatonde',eng:'M. Frighton',geo:'S. W. Banda',his:'P. Wandikani',mat:'W. Moyenda',phy:'M. Tembo',soc:'A. Nkhoma',
+
+  }
+  const class2W = {
+    agr:'Chepani Phiri',bib:'Semu Banda',bio:'M. Mwenebungu',che:'C. Baikolo',chi:'M. Malata',com:'H. Kwanunkhatonde',eng:'E. Mughandira',geo:'L. Mitaye',his:'L. Gondwe',mat:'L. Jabesi',phy:'C. Baikolo',soc:'S. Mazengera',
+
+  }
+  const class3 = {
+    agr:'C. Mlanguluka',bib:'F. Kachiundo',bio:'F.John',che:'E. Nyengere',chi:'R. Njirazafa',com:'B. Majamanda',eng:'P. Wandikani',geo:'S. W. Banda',his:'B. Kwenda',mat:'C. Gondwe',phy:'M. Tembo',soc:'L. Mitaye',
+
+  }
+  const class4 = {
+    agr:'F. Nkhambule',bib:'F. Kachiundo',bio:'V. Phiri',che:'L. Jabesi',chi:'G. Maombe',com:'',eng:"A. Msang'azi",geo:'A. Nkhoma',his:'B. Kwenda',mat:'J. Mtengabvumba',phy:'E. Nyengere',soc:'S. Mphoyo',
+
+  }
+  const teachers = {
+    "class1E":class1E,
+    "class1W":class1W,
+    "class2E":class2E,
+    "class2W":class2W,
+    "class3":class3,
+    "class4":class4,
+  }
+  const subjectsNames ={
+  "agr":"Agriculture","bib":"Bible Knowledge","bio":"Biology","che":"Chemistry",
+  "chi":"Chichewa","com":"Computer Studies","eng":"English","geo":"Geography",
+  "his": "History","mat":"Mathematics","phy":"Physics","soc":"Social & Life"
+    };
+  let currentClass = "1E";
+  let currentView = "allSubjects";
+  let currentSubject = null;
+  let showingClassList = false;
+  let viewSubject= false;
+  function init() {
+    const classSelect = document.getElementById("classSelect");
+    const classSet = new Set(termlyData.map(d => d.class));
+    classSelect.innerHTML = "";
+    classSet.forEach(cls => {
+      const option = document.createElement("option");
+      option.value = cls;
+      option.textContent = cls;
+      classSelect.appendChild(option);
+    });
+    classSelect.value = currentClass;
+
+    classSelect.addEventListener("change", e => {
+      currentClass = e.target.value;
+      //currentSubject = null;
+      showingClassList = false;
+      if(viewSubject == false){
+        
+        renderView();
+      }else{
+        showingClassList = false;
+        renderSubjectView();
+      }
+      
+    });
+
+    document.getElementById("viewSelect").addEventListener("change", e => {
+      if(e.target.value == "allSubjects" || e.target.value == "classSummary"){
+      currentView = e.target.value;
+      currentSubject = null;
+      showingClassList = false;
+      viewSubject = false;
+      renderView();
+      }else{
+        viewSubject = true;
+        currentSubject = e.target.value;
+        showingClassList = false;
+        renderSubjectView();
+      }
+     
+    });
+
+    document.getElementById("downloadPdf").addEventListener("click", downloadPdf);
+
+    renderView();
+  }
+
+  function renderView() {
+    document.getElementById("subjectButtons").innerHTML = "";
+    document.getElementById("tableContainer").innerHTML = "";
+    showingClassList = false;
+    currentSubject = null;
+
+    if (currentView === "allSubjects") {
+      renderAllSubjectsView();
+    } else if (currentView === "classSummary") {
+      renderClassSummary();
+    }
+  }
+
+  function renderAllSubjectsView() {
+    const subjectButtonsDiv = document.getElementById("viewSelect");
+    renderAllSubjectsTable();
+  }
+
+  function renderAllSubjectsTable() {
+    const filteredData = termlyData.filter(d => d.class === currentClass  && d.class_rank != "");
+    filteredData.sort((a,b) => Number(a["class_rank"]) - Number(b["class_rank"]));
+    const table = document.createElement("table");
+    const thead = document.createElement("thead");
+    const tbody = document.createElement("tbody");
+
+    const headerRow = document.createElement("tr");
+    headerRow.appendChild(createCell("th", "#"));
+    const theNameH = document.createElement("td");
+      theNameH.textContent= "Student Name";
+      theNameH.classList.add("the_name_head");
+    headerRow.appendChild(theNameH);
+    if(currentClass == 4 || currentClass == 3){
+      headerRow.appendChild(createCell("th", "Points"));
+    }else{
+      headerRow.appendChild(createCell("th", "Average"));
+    }
+    
+    subjects.forEach(sub => headerRow.appendChild(createCell("th", sub.toUpperCase())));
+    headerRow.appendChild(createCell("th", "Status"));
+    thead.appendChild(headerRow);
+
+    filteredData.forEach(student => {
+      const row = document.createElement("tr");
+      
+      
+      var studentName = "";
+      students.forEach( eachST =>{
+        if(eachST["st_no"] == student.st_no){
+          studentName = eachST["st_name"];
+        }
+      });
+
+      row.appendChild(createCell("td", student.class_rank));
+      const theName = document.createElement("td");
+      theName.textContent= studentName;
+      theName.classList.add("the_name");
+      row.appendChild(theName);
+
+      const stGrade = document.createElement("td");
+      stGrade.textContent= student.class_grade;
+      stGrade.classList.add("st_grade");
+      row.appendChild(stGrade);
+      subjects.forEach(sub => {
+        row.appendChild(createCell("td", student[sub] === "-" ? "" : student[sub]));
+      });
+      row.appendChild(createCell("td", student.status));
+      tbody.appendChild(row);
+    });
+    const tittleRow = document.createElement("thead");
+    tittleRow.innerHTML= '<td class="tebo_tito" colspan = "16">Natola CDSS <strong>Form '+currentClass+'</strong>, 2025-2026 End of Term '+gotM+' Examination Results, All Subjects</td>';
+    table.appendChild(tittleRow);
+    table.appendChild(thead);
+    table.appendChild(tbody);
+    document.getElementById("tableContainer").innerHTML = "";
+    document.getElementById("tableContainer").appendChild(table);
+  }
+
+  function renderSubjectView() {
+    const filteredData = termlyData.filter(d => d.class === currentClass && d[currentSubject] >= 0);
+    filteredData.sort((a, b) => Number(b[currentSubject]) - Number(a[currentSubject]));
+
+    const table = document.createElement("table");
+    const thead = document.createElement("thead");
+    const tbody = document.createElement("tbody");
+
+    const headerRow = document.createElement("tr");
+    headerRow.appendChild(createCell("th", "Exam No."));
+    const theNameH = document.createElement("td");
+      theNameH.textContent= "Student Name";
+      theNameH.classList.add("the_name_head");
+    headerRow.appendChild(theNameH);
+    headerRow.appendChild(createCell("th", "Score"));
+    headerRow.appendChild(createCell("th", "Grade"));
+    headerRow.appendChild(createCell("th", "Position"));
+    thead.appendChild(headerRow);
+    
+    
+    filteredData.forEach(student => {
+      if (student[currentSubject] >= 0){
+        const row = document.createElement("tr");
+      row.appendChild(createCell("td", student.st_no));
+      const theName = document.createElement("td");
+      theName.textContent= getSName(student.st_no);
+      theName.classList.add("the_name");
+      row.appendChild(theName);
+      row.appendChild(createCell("td", student[currentSubject]));
+      row.appendChild(createCell("td", student[`${currentSubject}_grade`]));
+      row.appendChild(createCell("td", student[`${currentSubject}_rank`]));
+      tbody.appendChild(row);
+      }
+      
+    });
+    const tittleRow = document.createElement("thead");
+    tittleRow.innerHTML= '<td class="tebo_tito" colspan = "5">Natola CDSS <strong>Form '+currentClass+' '+subjectsNames[currentSubject]+'</strong>, 2025-2026 End of Term '+gotM+' Examination Results</td>';
+    table.appendChild(tittleRow);
+    table.appendChild(thead);
+    table.appendChild(tbody);
+
+    const tableContainer = document.getElementById("tableContainer");
+    tableContainer.innerHTML = "";
+    tableContainer.appendChild(table);
+  }
+
+  function getSName (st_no){
+    var studentName = "";
+    students.forEach( eachST =>{
+        if(eachST["st_no"] == st_no){
+          studentName = eachST["st_name"];
+        }
+      });
+      return studentName;
+  }
+  function renderClassList() {
+    if (!currentSubject) return;
+    const filteredData = termlyData.filter(d => d.class === currentClass && d[currentSubject] !== "-");
+
+    const total = filteredData.length;
+    const passed = filteredData.filter(s => s[currentSubject]>= 40).length;
+    const wrote = filteredData.filter(s => s[currentSubject]>= 0).length;
+    const scores = filteredData.map(s => Number(s[currentSubject]));
+    const highest = Math.max(...scores);
+    const lowest = Math.min(...scores);
+    const average = (scores.reduce((a,b) => a+b, 0) / total).toFixed(2);
+
+    const gradeCounts = {};
+    filteredData.forEach(s => {
+      const g = s[`${currentSubject}_grade`];
+      if (g && g !== "-") {
+        gradeCounts[g] = (gradeCounts[g] || 0) + 1;
+      }
+    });
+
+    const table = document.createElement("table");
+    const tbody = document.createElement("tbody");
+
+    addSummaryRow(tbody, "Passed", passed);
+    addSummaryRow(tbody, "Wrote Exam", wrote);
+    addSummaryRow(tbody, "Highest Score", highest);
+    addSummaryRow(tbody, "Lowest Score", lowest);
+    addSummaryRow(tbody, "Average Score", average);
+
+    for (const [grade, count] of Object.entries(gradeCounts)) {
+      addSummaryRow(tbody, `Grade ${grade}`, count);
+    }
+
+    table.appendChild(tbody);
+
+    const tableContainer = document.getElementById("tableContainer");
+    tableContainer.innerHTML = "";
+    tableContainer.appendChild(table);
+  }
+var arrangeSub = [];
+function arrangeSubjects(){
+  var count = 0;
+  subjects.forEach(sub => {    
+        
+        const filteredData = termlyData.filter(d => d.class === currentClass);
+        const passed = filteredData.filter(s => s[sub]>= 40).length;
+        const wrote = filteredData.filter(s => s[sub]>= 0).length;
+        var eachRow = {
+          "sub":sub,
+          "score":Math.round((passed*100/wrote),0),
+        }
+        arrangeSub[count]= eachRow;
+        count++;
+  });
+  
+  arrangeSub.sort((a, b) => Number(b["score"]) - Number(a["score"]));
+  
+  return arrangeSub;
+}
+    function renderClassSummary() {
+      
+      
+    if(currentClass == 4 || currentClass == 3){
+      const filteredData = termlyData.filter(d => d.class === currentClass);
+      const table = document.createElement("table");
+      const thead = document.createElement("thead");
+      const tbody = document.createElement("tbody");
+      const headerRow = document.createElement("tr");
+      const theNameH = document.createElement("td");
+      theNameH.textContent= "Subject";
+      theNameH.classList.add("the_name_head");
+    headerRow.appendChild(theNameH);
+      headerRow.appendChild(createCell("th", "Passed"));
+      headerRow.appendChild(createCell("th", "Total"));
+      headerRow.appendChild(createCell("th", "Passed%"));
+      headerRow.appendChild(createCell("th", "AB"));
+      headerRow.appendChild(createCell("th", "1"));
+      headerRow.appendChild(createCell("th", "2"));
+      headerRow.appendChild(createCell("th", "3"));
+      headerRow.appendChild(createCell("th", "4"));
+      headerRow.appendChild(createCell("th", "5"));
+      headerRow.appendChild(createCell("th", "6"));
+      headerRow.appendChild(createCell("th", "7"));
+      headerRow.appendChild(createCell("th", "8"));
+      headerRow.appendChild(createCell("th", "9"));
+      headerRow.appendChild(createCell("th", "Teacher"));
+      thead.appendChild(headerRow);
+      var arrangedSubjects = arrangeSubjects();
+      arrangedSubjects.forEach(eachSub => { 
+      var sub = eachSub["sub"];
+      const total = filteredData.length;
+      const passed = filteredData.filter(s => s[sub]>= 40).length;
+      const wrote = filteredData.filter(s => s[sub]>= 0).length;
+      const abscent = filteredData.filter(s => s[sub]== "-").length;
+      const ones = filteredData.filter(s => s[sub+"_grade"]== 1).length;
+      const twos = filteredData.filter(s => s[sub+"_grade"]== 2).length;
+      const threes = filteredData.filter(s => s[sub+"_grade"]== 3).length;
+      const fours = filteredData.filter(s => s[sub+"_grade"]== 4).length;
+      const fives = filteredData.filter(s => s[sub+"_grade"]== 5).length;
+      const sixs = filteredData.filter(s => s[sub+"_grade"]== 6).length;
+      const sevens = filteredData.filter(s => s[sub+"_grade"]== 7).length;
+      const eights = filteredData.filter(s => s[sub+"_grade"]== 8).length;
+      const nines = filteredData.filter(s => s[sub+"_grade"]== 9).length;
+
+        const row = document.createElement("tr");
+        const theName = document.createElement("td");
+      theName.textContent= subjectsNames[sub];
+      theName.classList.add("the_name");
+      row.appendChild(theName);
+              
+        row.appendChild(createCell("td", passed));
+        row.appendChild(createCell("td", wrote));
+        row.appendChild(createCell("td", Math.round((passed*100/wrote),0)+"%"));
+        const absc = document.createElement("td");
+        absc.classList.add("absc");
+        absc.textContent = abscent;
+        row.appendChild(absc);
+        row.appendChild(createCell("td", ones));
+        row.appendChild(createCell("td", twos));
+        row.appendChild(createCell("td", threes));
+        row.appendChild(createCell("td", fours));
+        row.appendChild(createCell("td", fives));
+        row.appendChild(createCell("td", sixs));
+        row.appendChild(createCell("td", sevens));
+        row.appendChild(createCell("td", eights));
+        row.appendChild(createCell("td", nines));
+        const teacherName = document.createElement("td");
+      teacherName.textContent= teachers["class"+currentClass][sub];
+      teacherName.classList.add("the_teacher");
+      row.appendChild(teacherName);
+        tbody.appendChild(row);
+    });
+    const tittlRow = document.createElement("thead");
+    tittlRow.innerHTML= '<td class="tebo_tito" colspan = "16">Natola CDSS <strong>Form '+currentClass+'</strong>, 2025-2026 End of Term '+gotM+' Examination Results, Class Analysis</td>';
+    table.appendChild(tittlRow);
+    table.appendChild(thead);
+    table.appendChild(tbody);
+
+    const tableContainer = document.getElementById("tableContainer");
+    tableContainer.innerHTML = "";
+    tableContainer.appendChild(table);
+    }else{
+      const filteredData = termlyData.filter(d => d.class === currentClass);
+      const table = document.createElement("table");
+      const thead = document.createElement("thead");
+      const tbody = document.createElement("tbody");
+      const headerRow = document.createElement("tr");
+      const theNameH = document.createElement("td");
+      theNameH.textContent= "Subject";
+      theNameH.classList.add("the_name_head");
+      headerRow.appendChild(theNameH);
+      headerRow.appendChild(createCell("th", "Passed"));
+      headerRow.appendChild(createCell("th", "Total"));
+      headerRow.appendChild(createCell("th", "Passed%"));
+      headerRow.appendChild(createCell("th", "AB"));
+      headerRow.appendChild(createCell("th", "A"));
+      headerRow.appendChild(createCell("th", "B"));
+      headerRow.appendChild(createCell("th", "C"));
+      headerRow.appendChild(createCell("th", "D"));
+      headerRow.appendChild(createCell("th", "F"));
+      headerRow.appendChild(createCell("th", "Teacher"));
+      thead.appendChild(headerRow);
+      var arrangedSubjects = arrangeSubjects();
+      arrangedSubjects.forEach(eachSub => { 
+      var sub = eachSub["sub"];  
+      const total = filteredData.length;
+      const passed = filteredData.filter(s => s[sub]>= 40).length;
+      const wrote = filteredData.filter(s => s[sub]>= 0).length;
+      const abscent = filteredData.filter(s => s[sub]== "-").length;
+      const aaas = filteredData.filter(s => s[sub+"_grade"]== "A").length;
+      const bbbs = filteredData.filter(s => s[sub+"_grade"]== "B").length;
+      const cccs = filteredData.filter(s => s[sub+"_grade"]== "C").length;
+      const ddds = filteredData.filter(s => s[sub+"_grade"]== "D").length;
+      const fffs = filteredData.filter(s => s[sub+"_grade"]== "F").length;
+      
+        const row = document.createElement("tr");
+        const theName = document.createElement("td");
+      theName.textContent= subjectsNames[sub];
+      theName.classList.add("the_name");
+      row.appendChild(theName);
+        
+        row.appendChild(createCell("td", passed));
+        row.appendChild(createCell("td", wrote));
+        row.appendChild(createCell("td", Math.round((passed*100/wrote),0)+"%"));
+        const absc = document.createElement("td");
+        absc.classList.add("absc");
+        absc.textContent = abscent;
+        row.appendChild(absc);
+        row.appendChild(createCell("td", aaas));
+        row.appendChild(createCell("td", bbbs));
+        row.appendChild(createCell("td", cccs));
+        row.appendChild(createCell("td", ddds));
+        row.appendChild(createCell("td", fffs));
+        const teacherName = document.createElement("td");
+      teacherName.textContent= teachers["class"+currentClass][sub];
+      teacherName.classList.add("the_teacher");
+      row.appendChild(teacherName);
+        tbody.appendChild(row);
+    });
+    const tittlRow = document.createElement("thead");
+    tittlRow.innerHTML= '<td class="tebo_tito" colspan = "16">Natola CDSS <strong>Form '+currentClass+'</strong>, 2025-2026 End of Term '+gotM+' Examination Results, Class Analysis</td>';
+    table.appendChild(tittlRow);
+    table.appendChild(thead);
+    table.appendChild(tbody);
+
+    const tableContainer = document.getElementById("tableContainer");
+    tableContainer.innerHTML = "";
+    tableContainer.appendChild(table);
+    }
+      
+  }
+
+  function createCell(type, text) {
+    const cell = document.createElement(type);
+    cell.textContent = text;
+    return cell;
+  }
+
+  function addSummaryRow(tbody, label, value) {
+    const row = document.createElement("tr");
+    row.appendChild(createCell("td", label));
+    row.appendChild(createCell("td", value));
+    tbody.appendChild(row);
+  }
+
+  async function downloadPdf() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    const table = document.querySelector("#tableContainer table");
+    if (!table) {
+      alert("No table to export!");
+      return;
+    }
+
+    if (!doc.autoTable) {
+      await loadAutoTable();
+    }
+
+    doc.autoTable({ html: table, theme: 'grid', styles: { textColor: '#003366' }, headStyles: { fillColor: '#87ceeb' } });
+    doc.save("table.pdf");
+  }
+
+  function loadAutoTable() {
+    return new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js";
+      script.onload = resolve;
+      script.onerror = reject;
+      document.head.appendChild(script);
+    });
+  }
+
+  init();
+</script>
+
+</body>
+</html>
