@@ -1126,9 +1126,9 @@
             <div class = "nato"></div>
             
             <div class = "notice">
-              <p style = "margin-top: 10px;">The 2025 to 2026 mock examination results and the end of term two
-                examination results are <strong>not</strong> yet out. You can check the 2025 to 2026 end of term 1 examination results now through the 
-                <strong>students portal</strong> and the <strong>teachers portal</strong>.
+              <p style = "margin-top: 10px;">The 2025 to 2026 Mock Examination Results and the end of term two
+                examination results are out. You can check them now through the 
+                <strong>students portal</strong>. Contact the ICT officer for any assistance 0996790796(whatsapp only)
                 </p>
               <div class="heroActions" role="group" aria-label="Primary actions">
               <a href="login.html"><button class="btn btnPrimary" id="quickSubmitBtn">Students Portal</button></a>
@@ -1159,7 +1159,7 @@
           </div>
 
           <aside class="heroPanel heroAside reveal d4" aria-label="Highlights and calendar">
-            <strong>Term 1 Results Summary</strong>
+            <strong>Term 2 Results Summary</strong>
             <div class="metricRow" aria-label="Key metrics">
               <div class="metric">
                   <div>
@@ -1239,7 +1239,7 @@
       </div>
     </main>
   </div>
-<script src="term1_data.js"></script>
+<script src="term2_data.js"></script>
   <script>
     // Helpers
     const $ = (q, el=document) => el.querySelector(q);
@@ -1263,7 +1263,7 @@
       var countSat = 0;
       var boysPassed=0;
       var girlsPassed=0;
-      termlyData.forEach(record => {
+      terml2Data.forEach(record => {
         if(record["class"] == thisClass){
           if(record["status"] == "passed"){
               numPassed++;
