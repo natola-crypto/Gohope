@@ -4,6 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Teacher Portal</title>
+<link rel="icon" type="image/png" href="toplogo.png">
 <style>
   body {
     font-family: Arial, sans-serif;
@@ -387,7 +388,7 @@
       theName.textContent= getSName(student.st_no);
       theName.classList.add("the_name");
       row.appendChild(theName);
-      row.appendChild(createCell("td", student[currentSubject]+"%"));
+      row.appendChild(createCell("td", student[currentSubject]));
       row.appendChild(createCell("td", student[`${currentSubject}_grade`]));
       row.appendChild(createCell("td", student[`${currentSubject}_rank`]));
       tbody.appendChild(row);
