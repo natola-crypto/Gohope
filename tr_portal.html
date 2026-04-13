@@ -505,7 +505,7 @@ function arrangeSubjects(){
       var arrangedSubjects = arrangeSubjects();
       arrangedSubjects.forEach(eachSub => { 
       var sub = eachSub["sub"];
-      const total = filteredData.length;
+      const total = filteredData.filter(s => s[sub]!= "").length;
       const passed = filteredData.filter(s => s[sub]>= 40).length;
       const wrote = filteredData.filter(s => s[sub]>= 0).length;
       const abscent = filteredData.filter(s => s[sub]== "-").length;
