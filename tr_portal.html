@@ -381,7 +381,7 @@
     
     
     filteredData.forEach(student => {
-      if (student[currentSubject] >= 0){
+      if (student[currentSubject] >= 0 && student[currentSubject] != ""){
         const row = document.createElement("tr");
       row.appendChild(createCell("td", student.st_no));
       const theName = document.createElement("td");
@@ -505,7 +505,7 @@ function arrangeSubjects(){
       var arrangedSubjects = arrangeSubjects();
       arrangedSubjects.forEach(eachSub => { 
       var sub = eachSub["sub"];
-      const total = filteredData.filter(s => s[sub]!= "").length;
+      const total = filteredData.length;
       const passed = filteredData.filter(s => s[sub]>= 40).length;
       const wrote = filteredData.filter(s => s[sub]>= 0).length;
       const abscent = filteredData.filter(s => s[sub]== "-").length;
@@ -582,7 +582,7 @@ function arrangeSubjects(){
       var sub = eachSub["sub"];  
       const total = filteredData.length;
       const passed = filteredData.filter(s => s[sub]>= 40).length;
-      const wrote = filteredData.filter(s => s[sub]>= 0).length;
+      const wrote = filteredData.filter(s => s[sub]>= 0  && s[sub]!= "").length;
       const abscent = filteredData.filter(s => s[sub]== "-").length;
       const aaas = filteredData.filter(s => s[sub+"_grade"]== "A").length;
       const bbbs = filteredData.filter(s => s[sub+"_grade"]== "B").length;
@@ -653,9 +653,10 @@ function arrangeSubjects(){
     if (!doc.autoTable) {
       await loadAutoTable();
     }
+    
 
     doc.autoTable({ html: table, theme: 'grid', styles: { textColor: '#003366' }, headStyles: { fillColor: '#87ceeb' } });
-    doc.save("table.pdf");
+    doc.save("Natola Exam results.pdf");
   }
 
   function loadAutoTable() {
