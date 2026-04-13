@@ -371,38 +371,10 @@
   </section><br>
 
   <div class="container" role="main" aria-label="Student results dashboard">
-    <div class="term_title">End of Term 2 Examination Results </div>
-    <div class = "exam_display" id = "exam_display2">
-      <table aria-describedby="resultsDesc" role="table" id="results_table2">
-      <caption id="resultsDesc" class="sr-only">List of subjects and student grades with position and comments</caption>
-      <thead>
-        <tr>
-          <th scope="col" id = "thesub">Subject</th>
-          <th scope="col">Score</th>
-          <th scope="col">Position</th>
-          <th scope="col">Grade</th>
-          <th scope="col">Comments</th>
     
-        </tr>
-      </thead>
-      <tbody id="resultsbody2">
-        <!-- JS fills -->
-      </tbody>
-    </table>
-    </div>
-    <section class="studentInfo" aria-label="Student information" id = "student_summary2">
-      <div class="summary" ><label>Class:</label><div id="class2"></div></div>
-      <div class="summary" ><label>Position:</label><div id="class_rank2"></div></div>
-      <div class="summary" ><label id = "aggregate2">Average:</label><div id="class_grade2"></div></div>
-      <div class="summary" ><label>Status:</label><div id="status2"></div></div>
-    </section>
-  
-     </div><br>
-
-  <div class="container" role="main" aria-label="Student results dashboard">
     <div class="term_title">End of Term 1 Examination Results </div>
-    <div class = "exam_display" id = "exam_display1">
-      <table aria-describedby="resultsDesc" role="table" id="results_table1">
+    <div class = "exam_display" id = "exam_display">
+      <table aria-describedby="resultsDesc" role="table" id="results_table">
       <caption id="resultsDesc" class="sr-only">List of subjects and student grades with position and comments</caption>
       <thead>
         <tr>
@@ -414,24 +386,22 @@
     
         </tr>
       </thead>
-      <tbody id="resultsbody1">
+      <tbody id="resultsBody">
         <!-- JS fills -->
       </tbody>
     </table>
     </div>
-    <section class="studentInfo" aria-label="Student information" id = "student_summary1">
-      <div class="summary" ><label>Class:</label><div id="class1"></div></div>
-      <div class="summary" ><label>Position:</label><div id="class_rank1"></div></div>
-      <div class="summary" ><label id = "aggregate1">Average:</label><div id="class_grade1"></div></div>
-      <div class="summary" ><label>Status:</label><div id="status1"></div></div>
+    <section class="studentInfo" aria-label="Student information" id = "student_summary">
+      <div class="summary" ><label>Class:</label><div id="class"></div></div>
+      <div class="summary" ><label>Position:</label><div id="class_rank"></div></div>
+      <div class="summary" ><label id = "aggregate">Average:</label><div id="class_grade"></div></div>
+      <div class="summary" ><label>Status:</label><div id="status"></div></div>
     </section>
    
 
     <div id="noResults" class="noResults" style="color:var(--navy-2)"> For any assistance contact the ICT officer on whatsapp <strong>0996790796</strong></div>
   </div>
-
-  
-  <script src="term2_data.js"></script>
+  <script src="term1_data.js"></script>
   <script>
     const getpara = new URL(window.location.href);
     const gotV = getpara.searchParams.get("st_no");
@@ -460,23 +430,15 @@ const subjectsNames ={
   "chi":"Chichewa","com":"Computer Studies","eng":"English","geo":"Geography",
   "his": "History","mat":"Mathematics","phy":"Physics","soc":"Social & Life"
 };
-var termlyData = {};
-termlyData = term2Data;
-displayTermly (2);
-termlyData = term1Data;
-displayTermly (1);
 
-function displayTermly (term_no){
-  
-const tbody = document.getElementById("resultsbody"+term_no);
+const tbody = document.getElementById('resultsBody');
       tbody.innerHTML = '';
 var studentFound = false;   
 termlyData.forEach(element => {
         if(element["st_no"] == gotV){
           studentFound = true;
           if(element["class"]== 3 || element["class"]== 4){
-            
-            const aggr = document.getElementById("aggregate"+term_no);
+            const aggr = document.getElementById("aggregate");
             aggr.textContent = "Aggragete Points:";
             const comments = {
               "1":"Excellent! keep it up",
@@ -559,9 +521,10 @@ termlyData.forEach(element => {
               tbody.appendChild(tr); 
               }
           });
-          const classN = document.getElementById("class"+term_no);
-          const classG = document.getElementById("class_grade"+term_no);
-          const theStatus = document.getElementById("status"+term_no);
+            
+          const classN = document.getElementById('class');
+          const classG = document.getElementById('class_grade');
+          const theStatus = document.getElementById('status');
           classN.textContent = "Form "+element['class'];
           classG.textContent = element['class_grade'];
           theStatus.textContent = element['status'];
@@ -579,7 +542,7 @@ termlyData.forEach(element => {
               "F":"Work very hard to improve",
             }
             subjects.forEach( subject =>{
-            if(element[subject] != "-" && element[subject] != ""){
+            if(element[subject] >= 0 ){
               const tr = document.createElement('tr');
               tr.innerHTML = `
                 <td class="subject">${subjectsNames[subject]}</td>
@@ -594,7 +557,7 @@ termlyData.forEach(element => {
           });
           subjects.forEach( subject =>{
             const tr = document.createElement('tr');
-            if(element[subject] =="-" || element[subject] ==""){
+            if(element[subject] =="-" ){
                 tr.style.backgroundColor = "#f9d5d5ea";
                 tr.innerHTML = `
                 <td class="subject">${subjectsNames[subject]}</td>
@@ -606,10 +569,10 @@ termlyData.forEach(element => {
             }
           });
             
-          const classN = document.getElementById('class'+term_no);
+          const classN = document.getElementById('class');
           
-          const classG = document.getElementById('class_grade'+term_no);
-          const theStatus = document.getElementById('status'+term_no);
+          const classG = document.getElementById('class_grade');
+          const theStatus = document.getElementById('status');
           classN.textContent = "Form "+element['class'];
           
           classG.textContent = element['class_grade'];
@@ -620,21 +583,19 @@ termlyData.forEach(element => {
               theStatus.classList.add("failed");
             }
           }
-          const position = document.getElementById('class_rank'+term_no);
+          const position = document.getElementById('class_rank');
           position.textContent = element['class_rank'];
         }
       
       });
       if(studentFound == false){
-          const resultsTable = document.getElementById('results_table'+term_no);
+          const resultsTable = document.getElementById('results_table');
           resultsTable.style.display = "none";
-          const studentSummary = document.getElementById('student_summary'+term_no);
+          const studentSummary = document.getElementById('student_summary');
           studentSummary.style.display = "none";
-          const examDisplay = document.getElementById('exam_display'+term_no);
+          const examDisplay = document.getElementById('exam_display');
           examDisplay.innerHTML = '<p style = "text-align: center;">Your results for this term have not been found, please consult your form teacher.</p>';
         }
-}
-
 function getClassCount(st_class){
   var classTotal =0;
   termlyData.forEach(record => {
