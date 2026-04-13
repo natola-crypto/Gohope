@@ -461,7 +461,7 @@ function arrangeSubjects(){
         
         const filteredData = termlyData.filter(d => d.class === currentClass);
         const passed = filteredData.filter(s => s[sub]>= 40).length;
-        const wrote = filteredData.filter(s => s[sub]>= 0).length;
+        const wrote = filteredData.filter(s => s[sub]>= 0 && s[sub]!= "").length;
         var eachRow = {
           "sub":sub,
           "score":Math.round((passed*100/wrote),0),
