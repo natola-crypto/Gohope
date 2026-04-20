@@ -172,16 +172,15 @@
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="new_data.js"></script>
-<script src="process_data.js"></script>
+<script src="term2_data.js"></script>
 <script>
     const getpara = new URL(window.location.href);
     const gotM = getpara.searchParams.get("tm");
-    let termlyData = {};
+   let termlyData = {};
     if(gotM == 2){
-      termlyData = getProcessed(term2Data);
+      termlyData = term2Data;
     }else if(gotM == 1){
-      termlyData = getProcessed(term1Data);
+      termlyData = term1Data;
     }
 
   const subjects = ["agr", "bib", "bio", "che", "chi", "com", "eng", "geo", "his", "mat", "phy", "soc"];

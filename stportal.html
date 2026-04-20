@@ -429,10 +429,8 @@
 
     <div id="noResults" class="noResults" style="color:var(--navy-2)"> For any assistance contact the ICT officer on whatsapp <strong>0996790796</strong></div>
   </div>
-
   
-  <script src="new_data.js"></script>
-  <script src="process_data.js"></script>
+ <script src="term2_data.js"></script>
   <script>
     const getpara = new URL(window.location.href);
     const gotV = getpara.searchParams.get("st_no");
@@ -462,9 +460,9 @@ const subjectsNames ={
   "his": "History","mat":"Mathematics","phy":"Physics","soc":"Social & Life"
 };
 var termlyData = {};
-termlyData = getProcessed(term2Data);
+termlyData = term2Data;
 displayTermly (2);
-termlyData = getProcessed(term1Data);
+termlyData = term1Data;
 displayTermly (1);
 
 function displayTermly (term_no){
